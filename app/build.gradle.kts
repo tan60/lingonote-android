@@ -6,14 +6,14 @@ plugins {
 
 android {
     namespace = "com.musdev.lingonote"
-    compileSdk = 33
+    compileSdk = Configurations.compileSdk
 
     defaultConfig {
         applicationId = "com.musdev.lingonote"
-        minSdk = 24
-        targetSdk = 33
-        versionCode = 1
-        versionName = "1.0"
+        minSdk = Configurations.minSdk
+        targetSdk = Configurations.targetSdk
+        versionCode = Configurations.versionCode
+        versionName = Configurations.versionName
 
         vectorDrawables {
             useSupportLibrary = true
@@ -50,6 +50,8 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":core-data"))
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
