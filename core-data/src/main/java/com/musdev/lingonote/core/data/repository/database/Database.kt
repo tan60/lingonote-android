@@ -5,7 +5,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 
-internal abstract class NoteDatabase : RoomDatabase() {
+abstract class Database : RoomDatabase() {
 
     abstract fun insertNote()
     abstract fun updateNote()
@@ -15,22 +15,18 @@ internal abstract class NoteDatabase : RoomDatabase() {
     abstract fun queryAchieves()
 
     companion object {
-        private var _instances: MutableMap<String, NoteDatabase?> = mutableMapOf()
+        private const val DB_NAME = "note-db"
+        private var _instances: Database? = null
 
-        fun getDatabase(context: Context, userId: String): NoteDatabase {
-            val db = Room.databaseBuilder(
-                context.applicationContext,
-                NoteDatabase::class.java,
-                "note_database").fallbackToDestructiveMigration()
-                .addCallback(object: Callback() {
-                    override fun onOpen(db: SupportSQLiteDatabase) {
-                        db.execSQL("PRAGMA synchronous = 1")
-                    }
-                }
-            ).build()
-            _instances[userId] = db
-            return _instances[userId] ?: error("DB not created")
+        fun getDatabase(context: Context): Database {
+            synchronized(this) {
+                val db = Room.databaseBuilder(
+                    context.applicationContext,
+                    Database::class.java, DB_NAME).build()
+                _instances = db
+            }
+
+            return _instances ?: error("DB not created")
         }
-
     }
 }
