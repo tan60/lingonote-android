@@ -17,7 +17,7 @@ data class DbNoteEntity(
     @ColumnInfo(name = "post_user_uid") val userUid: Int? = null,
 )
 
-data class AchieveEntity (
+data class DbAchieveEntity (
     @ColumnInfo(name = "date") val date: String,
     @ColumnInfo(name = "count") val count: Int
 )
