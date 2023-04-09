@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.google.devtools.ksp)
+    alias(libs.plugins.kotlin.plugin.serialization)
 }
 
 android {
@@ -43,10 +44,19 @@ android {
 
 dependencies {
 
+    //for Json - Moshi
     api(libs.moshi)
     ksp(libs.moshi.codegen)
-    ksp(libs.androidx.room.compiler)
 
+    //for Http client - Ktor
+    implementation(libs.ktor.client.core)
+    implementation(libs.ktor.client.cio)
+    implementation(libs.ktor.client.logging)
+    implementation(libs.ktor.client.content.negotiation)
+    implementation(libs.ktor.serialization.kotlinx.json)
+
+    //for Database - Room
+    ksp(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
 
