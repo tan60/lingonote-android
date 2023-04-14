@@ -1,11 +1,7 @@
 package com.musdev.lingonote.core.data.repository
 
-import android.content.Context
 import com.musdev.lingonote.core.data.model.GPTRequestModel
-import com.musdev.lingonote.core.data.repository.httpclient.ApiResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.musdev.lingonote.core.data.services.api.ApiResponse
 
 object Repository {
 

@@ -1,24 +1,21 @@
-package com.musdev.lingonote.core.data.repository.httpclient
+package com.musdev.lingonote.core.data.services.api
 
 import android.util.Log
-import com.musdev.lingonote.core.data.model.GPTRequestModel
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-import io.ktor.client.plugins.logging.DEFAULT
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
-import io.ktor.client.request.HttpRequest
 import io.ktor.client.request.header
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-object KtorClient {
-    val TAG = "Ktor"
-    val client = HttpClient(CIO) {
+object ApiService {
+    val TAG = "ApiService"
+    val httpClient = HttpClient(CIO) {
         //expectSuccess = true
         install(Logging) {
             logger = object: Logger {

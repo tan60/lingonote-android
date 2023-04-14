@@ -1,13 +1,15 @@
-package com.musdev.lingonote.core.data.repository.database.data
+package com.musdev.lingonote.core.data.services.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
+import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
 
 @Dao
-interface DbNoteDao {
+interface NoteDBDao {
     //특정 노트 하나만 질의
     @Query("SELECT * FROM note_table WHERE uid = :uid")
     suspend fun getEntity(uid: Int) : DbNoteEntity
@@ -47,7 +49,7 @@ interface DbNoteDao {
 
     //최초 노트 질의
     @Query("SELECT * FROM note_table ORDER BY uid ASC LIMIT 1")
-    suspend fun getFirstEntity() :  DbNoteEntity
+    suspend fun getFirstEntity() : DbNoteEntity
 
     //날짜 별로 작성한 노트의 갯수 질의
     @Query("SELECT date(post_issue_date) AS date, COUNT(*) AS count FROM note_table GROUP BY date(post_issue_date)")

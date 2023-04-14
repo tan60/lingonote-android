@@ -1,31 +1,31 @@
-package com.musdev.lingonote.core.data.repository.database
+package com.musdev.lingonote.core.data.services.database
 
 import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-import com.musdev.lingonote.core.data.repository.database.data.DbNoteDao
-import com.musdev.lingonote.core.data.repository.database.data.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
 
 @androidx.room.Database(
     version = 1,
     entities = [DbNoteEntity::class]
 )
 
-abstract class Database : RoomDatabase() {
-    abstract fun noteItemDao() : DbNoteDao
+abstract class RoomDB : RoomDatabase() {
+    abstract fun noteItemDao() : NoteDBDao
 
     companion object {
         private const val DB_NAME = "note-db"
 
         @Volatile
-        private var _instances: Database? = null
+        private var _instances: RoomDB? = null
 
-        fun getDatabase(context: Context): Database {
+        fun get(context: Context): RoomDB {
             synchronized(this) {
                 val db = Room.databaseBuilder(
                     context.applicationContext,
-                    Database::class.java, DB_NAME).fallbackToDestructiveMigration().build()
+                    RoomDB::class.java, DB_NAME
+                ).fallbackToDestructiveMigration().build()
                 _instances = db
             }
 

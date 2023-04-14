@@ -1,12 +1,12 @@
 package com.musdev.lingonote.core.data.repository
 
-import com.musdev.lingonote.core.data.repository.database.NoteDatabase
-import com.musdev.lingonote.core.data.repository.database.data.DbAchieveEntity
-import com.musdev.lingonote.core.data.repository.database.data.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.DbService
+import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
+import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
 
 internal class LocalRepositoryImpl : LocalRepository {
 
-    private val dbNoteDao by lazy { NoteDatabase.getNoteDao()}
+    private val dbNoteDao by lazy { DbService.getNoteDao()}
 
     override suspend fun fetchMyNotes(uid: Int): List<DbNoteEntity> {
         return dbNoteDao.getAllNotes()

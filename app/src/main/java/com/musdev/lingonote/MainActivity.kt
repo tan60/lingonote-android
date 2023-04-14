@@ -14,7 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.musdev.lingonote.core.data.model.GPTResponseModel
 import com.musdev.lingonote.core.data.repository.Repository
-import com.musdev.lingonote.core.data.repository.database.NoteDatabase
+import com.musdev.lingonote.core.data.services.database.DbService
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        NoteDatabase.build(this.application)
+        DbService.build(this.application)
 
         val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
 

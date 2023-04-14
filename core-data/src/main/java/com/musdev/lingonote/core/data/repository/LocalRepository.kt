@@ -1,7 +1,7 @@
 package com.musdev.lingonote.core.data.repository
 
-import com.musdev.lingonote.core.data.repository.database.data.DbAchieveEntity
-import com.musdev.lingonote.core.data.repository.database.data.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
+import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
 
 interface LocalRepository {
     suspend fun fetchMyNotes(uid: Int): List<DbNoteEntity> = listOf()

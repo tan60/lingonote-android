@@ -2,8 +2,8 @@ package com.musdev.lingonote.core.data.repository
 
 import com.musdev.lingonote.core.data.model.GPTRequestModel
 import com.musdev.lingonote.core.data.model.GPTResponseModel
-import com.musdev.lingonote.core.data.repository.httpclient.KtorClient
-import com.musdev.lingonote.core.data.repository.httpclient.ApiResponse
+import com.musdev.lingonote.core.data.services.api.ApiService
+import com.musdev.lingonote.core.data.services.api.ApiResponse
 import io.ktor.client.call.body
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
@@ -18,7 +18,7 @@ internal class RemoteRepositoryImpl : RemoteRepository {
 
     override suspend fun queryNoteContent(requestModel: GPTRequestModel): ApiResponse<Any> {
         runCatching {
-            KtorClient.client.post(apiUrlString) {
+            ApiService.httpClient.post(apiUrlString) {
                 headers {
                     //append("Content-type", "application/json; charset=UTF-8")
                     append("Authorization", "Bearer $apiKey")

@@ -1,4 +1,4 @@
-package com.musdev.lingonote.core.data.repository.database.data
+package com.musdev.lingonote.core.data.services.database.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
