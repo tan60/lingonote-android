@@ -1,8 +1,9 @@
 package com.musdev.lingonote.core.data.repository
 
+import com.musdev.lingonote.core.data.model.GPTError
 import com.musdev.lingonote.core.data.model.GPTRequestModel
 import com.musdev.lingonote.core.data.model.GPTResponseModel
-import com.musdev.lingonote.core.data.services.api.ApiService
+import com.musdev.lingonote.core.data.services.ApiService
 import com.musdev.lingonote.core.data.services.api.ApiResponse
 import io.ktor.client.call.body
 import io.ktor.client.request.headers
@@ -27,8 +28,12 @@ internal class RemoteRepositoryImpl : RemoteRepository {
                 contentType(ContentType.Application.Json)
                 setBody(requestModel)
             }
-        }.onSuccess {
-            return ApiResponse(it.body<GPTResponseModel>(), it.status.value)
+        }.onSuccess { response ->
+            return if (response.status.value in 200..299) {
+                ApiResponse(response.body<GPTResponseModel>(), response.status.value)
+            } else {
+                ApiResponse(response.body<GPTError>(), response.status.value)
+            }
             //return  it.body()
         }.onFailure {
             return ApiResponse(it.message, -1)

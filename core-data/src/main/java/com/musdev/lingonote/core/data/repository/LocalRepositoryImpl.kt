@@ -1,6 +1,6 @@
 package com.musdev.lingonote.core.data.repository
 
-import com.musdev.lingonote.core.data.services.database.DbService
+import com.musdev.lingonote.core.data.services.DbService
 import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
 import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
 

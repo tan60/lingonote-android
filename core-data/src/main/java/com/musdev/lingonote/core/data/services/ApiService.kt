@@ -1,4 +1,4 @@
-package com.musdev.lingonote.core.data.services.api
+package com.musdev.lingonote.core.data.services
 
 import android.util.Log
 import io.ktor.client.HttpClient

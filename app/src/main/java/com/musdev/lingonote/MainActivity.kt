@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.musdev.lingonote.core.data.model.GPTError
+import com.musdev.lingonote.core.data.model.GPTResponseError
 import com.musdev.lingonote.core.data.model.GPTResponseModel
 import com.musdev.lingonote.core.data.repository.Repository
-import com.musdev.lingonote.core.data.services.database.DbService
+import com.musdev.lingonote.core.data.services.DbService
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,13 +32,24 @@ class MainActivity : ComponentActivity() {
 
         val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
 
+
+
         lifecycleScope.launch(Dispatchers.IO) {
+
+            //Domain layer에서 처리해야 하는데 테스트로 여기서 처리함
             val result = Repository.improveNoteContent(content)
 
-            if (result.data is GPTResponseModel) {
-                Log.d("TEST", (result.data as GPTResponseModel).choices[0].text)
-            } else if (result.data is String){
-                Log.d("TEST", result.data as String)
+            when (result.status) {
+                200 -> {
+                    Log.d("TEST", (result.data as GPTResponseModel).choices[0].text)
+                }
+                else -> {
+                    if (result.data is GPTError) {
+                        Log.d("TEST", (result.data as GPTError).error.message)
+                    } else if (result.data is String){
+                        Log.d("TEST", result.data as String)
+                    }
+                }
             }
         }
 

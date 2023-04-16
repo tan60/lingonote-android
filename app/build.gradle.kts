@@ -1,13 +1,13 @@
 plugins {
-    /*id("com.android.application")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.devtools.ksp")*/
-
     alias(libs.plugins.com.android.application)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    //alias(libs.plugins.com.android.library)
+    //kotlin("kapt")
     alias(libs.plugins.com.google.devtools.ksp)
 }
+kotlin {
+    jvmToolchain(17)
+}
+
 
 android {
     namespace = "com.musdev.lingonote"
@@ -34,13 +34,17 @@ android {
             )
         }
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        //freeCompilerArgs = listOf("-Xcontext-receivers")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
-    kotlinOptions {
-        jvmTarget = "1.8"
-    }
+
     buildFeatures {
         compose = true
     }

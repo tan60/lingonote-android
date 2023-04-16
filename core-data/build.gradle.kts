@@ -1,8 +1,15 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
     alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.kotlin.plugin.serialization)
+    //kotlin("kapt")
+}
+
+kotlin {
+    jvmToolchain(17)
 }
 
 android {
@@ -27,6 +34,12 @@ android {
             )
         }
     }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+        //freeCompilerArgs = listOf("-Xcontext-receivers")
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -46,7 +59,7 @@ dependencies {
 
     //for Json - Moshi
     api(libs.moshi)
-    ksp(libs.moshi.codegen)
+    //ksp(libs.moshi.codegen)
 
     //for Http client - Ktor
     implementation(libs.ktor.client.core)

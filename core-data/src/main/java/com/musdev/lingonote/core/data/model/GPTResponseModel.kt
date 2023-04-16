@@ -31,7 +31,7 @@ data class Usages(
 )*/
 
 @Serializable
-data class GPTResponseModel (
+data class GPTResponseModel(
     val `object`: String,
     val created: String,
     val choices: List<Choice>,
@@ -39,7 +39,7 @@ data class GPTResponseModel (
 )
 
 @Serializable
-data class Choice (
+data class Choice(
     val text: String,
     val index: Int
 )
@@ -49,5 +49,18 @@ data class Usages(
     val prompt_tokens: Int,
     val completion_tokens: Int,
     val total_tokens: Int
+)
+
+
+@Serializable
+data class GPTError(
+    val error: Error
+)
+@Serializable
+data class Error(
+    val message: String,
+    val type: String,
+    val param: String?,
+    val code: String
 )
 
