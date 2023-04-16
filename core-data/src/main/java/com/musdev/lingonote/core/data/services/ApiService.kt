@@ -14,7 +14,7 @@ import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
 object ApiService {
-    val TAG = "ApiService"
+    const val TAG = "ApiService"
     val httpClient = HttpClient(CIO) {
         //expectSuccess = true
         install(Logging) {

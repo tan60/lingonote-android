@@ -1,7 +1,6 @@
 package com.musdev.lingonote
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,50 +11,33 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
-import com.musdev.lingonote.core.data.model.GPTError
-import com.musdev.lingonote.core.data.model.GPTResponseModel
-import com.musdev.lingonote.core.data.repository.Repository
-import com.musdev.lingonote.core.data.services.DbService
-import com.musdev.lingonote.core.domain.usecases.AICorrectContentUseCase
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
 
+    private val TAG = "AppDebug"
     private var name = "android"
+    //@Inject private lateinit var aICorrectContentUseCase: AICorrectContentUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        DbService.build(this.application)
+        //DbService.build(this.application)
 
         val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
 
-
-
         lifecycleScope.launch(Dispatchers.IO) {
-
-            //Domain layer에서 처리해야 하는데 테스트로 여기서 처리함
-
-            AICorrectContentUseCase()
-
-
-
-            val result = Repository.improveNoteContent(content)
-
-            when (result.status) {
-                200 -> {
-                    Log.d("TEST", (result.data as GPTResponseModel).choices[0].text)
+            /*var aiCorrectEntity = aICorrectContentUseCase.correctMyContent(content)
+            when (aiCorrectEntity.isSuccess) {
+                true -> {
+                    Log.d(TAG, aiCorrectEntity.correctedContent)
                 }
-                else -> {
-                    if (result.data is GPTError) {
-                        Log.d("TEST", (result.data as GPTError).error.message)
-                    } else if (result.data is String){
-                        Log.d("TEST", result.data as String)
-                    }
+                false -> {
+                    Log.d(TAG, aiCorrectEntity.errorMessage)
                 }
-            }
+            }*/
         }
 
         setContent {

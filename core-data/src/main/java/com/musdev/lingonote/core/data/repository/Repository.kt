@@ -2,10 +2,12 @@ package com.musdev.lingonote.core.data.repository
 
 import com.musdev.lingonote.core.data.model.GPTRequestModel
 import com.musdev.lingonote.core.data.services.api.ApiResponse
+import javax.inject.Inject
 
-object Repository {
-
-    private val remoteRepo = RemoteRepositoryImpl()
+class Repository @Inject constructor(
+    private val remoteRepo: RemoteRepository
+    )
+{
     suspend fun improveNoteContent(content: String) : ApiResponse<Any> {
 
         var requestModel = GPTRequestModel().apply {

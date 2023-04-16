@@ -11,15 +11,18 @@ import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import javax.inject.Inject
 
-internal class RemoteRepositoryImpl : RemoteRepository {
+class RemoteRepositoryImpl @Inject constructor(
+    private val apiService: ApiService
+): RemoteRepository {
 
     val apiUrlString = "https://api.openai.com/v1/edits"
     val apiKey = "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"
 
     override suspend fun queryNoteContent(requestModel: GPTRequestModel): ApiResponse<Any> {
         runCatching {
-            ApiService.httpClient.post(apiUrlString) {
+            apiService.httpClient.post(apiUrlString) {
                 headers {
                     //append("Content-type", "application/json; charset=UTF-8")
                     append("Authorization", "Bearer $apiKey")

@@ -1,20 +1,27 @@
 package com.musdev.lingonote.core.domain.usecases
 
-import com.musdev.lingonote.core.data.model.GPTError
-import com.musdev.lingonote.core.data.model.GPTResponseModel
-import com.musdev.lingonote.core.data.repository.RemoteRepository
-import com.musdev.lingonote.core.data.repository.Repository
 import com.musdev.lingonote.core.domain.entities.AICorrectEntity
 
 /**
  * 이름 규칙
  * 동사 + 명사/대상(선택사항) + UseCase
  */
-class AICorrectContentUseCase(
-    private val remoteRepository: RemoteRepository
-) {
+class AICorrectContentUseCase {
+
+    //private val repository = RemoteRepositoryImpl(ApiService)
+
     suspend fun correctMyContent(content: String): AICorrectEntity {
-        val result = Repository.improveNoteContent(content)
+
+        return AICorrectEntity()
+
+        /*var requestModel = GPTRequestModel().apply {
+            this.model = "text-davinci-edit-001"
+            this.input = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
+            this.instruction = "correct and improve only grammar."
+        }
+
+        val result = repository.queryNoteContent(requestModel)
+        //val result = repository.improveNoteContent(content)
 
         when (result.status) {
             200 -> {
@@ -36,6 +43,6 @@ class AICorrectContentUseCase(
                     }
                 }
             }
-        }
+        }*/
     }
 }

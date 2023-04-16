@@ -3,9 +3,10 @@ import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    alias(libs.plugins.com.google.devtools.ksp)
+    //alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.kotlin.plugin.serialization)
-    //kotlin("kapt")
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -52,6 +53,10 @@ android {
 
 dependencies {
 
+    //hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
+
     //for Json - Moshi
     api(libs.moshi)
     //ksp(libs.moshi.codegen)
@@ -64,8 +69,9 @@ dependencies {
     implementation(libs.ktor.serialization.kotlinx.json)
 
     //for Database - Room
-    ksp(libs.androidx.room.compiler)
+    kapt(libs.androidx.room.compiler)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
+
 
 }
