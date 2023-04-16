@@ -13,7 +13,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.musdev.lingonote.core.data.model.GPTError
-import com.musdev.lingonote.core.data.model.GPTResponseError
 import com.musdev.lingonote.core.data.model.GPTResponseModel
 import com.musdev.lingonote.core.data.repository.Repository
 import com.musdev.lingonote.core.data.services.DbService
