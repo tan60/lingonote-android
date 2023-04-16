@@ -16,6 +16,7 @@ import com.musdev.lingonote.core.data.model.GPTError
 import com.musdev.lingonote.core.data.model.GPTResponseModel
 import com.musdev.lingonote.core.data.repository.Repository
 import com.musdev.lingonote.core.data.services.DbService
+import com.musdev.lingonote.core.domain.usecases.AICorrectContentUseCase
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -36,6 +37,11 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
 
             //Domain layer에서 처리해야 하는데 테스트로 여기서 처리함
+
+            AICorrectContentUseCase()
+
+
+
             val result = Repository.improveNoteContent(content)
 
             when (result.status) {

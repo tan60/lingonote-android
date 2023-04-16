@@ -4,10 +4,6 @@ plugins {
     //kotlin("kapt")
     alias(libs.plugins.com.google.devtools.ksp)
 }
-kotlin {
-    jvmToolchain(17)
-}
-
 
 android {
     namespace = "com.musdev.lingonote"
@@ -37,7 +33,6 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
-        //freeCompilerArgs = listOf("-Xcontext-receivers")
     }
 
     compileOptions {
@@ -59,7 +54,7 @@ android {
 }
 
 dependencies {
-    implementation(project(":core-data"))
+    implementation(project(":core-domain"))
 
     //implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")

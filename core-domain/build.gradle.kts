@@ -1,15 +1,10 @@
-import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
-
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    alias(libs.plugins.com.google.devtools.ksp)
-    alias(libs.plugins.kotlin.plugin.serialization)
-    //kotlin("kapt")
 }
 
 android {
-    namespace = "com.musdev.lingonote.core.data"
+    namespace = "com.musdev.lingonote.core.domain"
     compileSdk = Configurations.compileSdk
 
     defaultConfig {
@@ -51,21 +46,12 @@ android {
 }
 
 dependencies {
+    implementation(project(":core-data"))
 
-    //for Json - Moshi
-    api(libs.moshi)
-    //ksp(libs.moshi.codegen)
-
-    //for Http client - Ktor
-    implementation(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
-    implementation(libs.ktor.client.logging)
-    implementation(libs.ktor.client.content.negotiation)
-    implementation(libs.ktor.serialization.kotlinx.json)
-
-    //for Database - Room
-    ksp(libs.androidx.room.compiler)
-    implementation(libs.androidx.room.ktx)
-    implementation(libs.androidx.room.runtime)
-
+    implementation("androidx.core:core-ktx:1.8.0")
+    implementation("androidx.appcompat:appcompat:1.4.1")
+    implementation("com.google.android.material:material:1.5.0")
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
 }
