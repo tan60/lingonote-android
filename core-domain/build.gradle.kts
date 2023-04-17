@@ -1,9 +1,11 @@
+import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
+
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    /*alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.kotlin.plugin.serialization)
-    alias(libs.plugins.hilt)*/
+    alias(libs.plugins.hilt)
+    kotlin("kapt")
 }
 
 android {
@@ -52,6 +54,6 @@ dependencies {
     implementation(project(":core-data"))
 
     //hilt
-    //implementation(libs.hilt.android)
-    //ksp(libs.hilt.android.compiler)
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.android.compiler)
 }

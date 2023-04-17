@@ -27,8 +27,8 @@ object ApiService {
         }
         install(ContentNegotiation) {
             json(Json {
-                //ignoreUnknownKeys = true
-                //coerceInputValues = true
+                ignoreUnknownKeys = true
+                coerceInputValues = true
                 prettyPrint = true //Json String 예쁘게 출력
                 isLenient = true //따옴표 규칙 완료(REC-4627)
             })

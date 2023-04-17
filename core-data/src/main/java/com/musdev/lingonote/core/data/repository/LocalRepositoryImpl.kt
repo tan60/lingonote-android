@@ -3,10 +3,13 @@ package com.musdev.lingonote.core.data.repository
 import com.musdev.lingonote.core.data.services.DbService
 import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
 import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
+import javax.inject.Inject
 
-internal class LocalRepositoryImpl : LocalRepository {
+class LocalRepositoryImpl @Inject constructor(
+    private val dbService: DbService
+) : LocalRepository {
 
-    private val dbNoteDao by lazy { DbService.getNoteDao()}
+    private val dbNoteDao by lazy { dbService.noteDBDao}
 
     override suspend fun fetchMyNotes(uid: Int): List<DbNoteEntity> {
         return dbNoteDao.getAllNotes()

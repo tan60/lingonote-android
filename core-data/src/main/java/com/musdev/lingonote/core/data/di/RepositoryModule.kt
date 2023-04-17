@@ -1,22 +1,21 @@
 package com.musdev.lingonote.core.data.di
 
+import android.content.Context
+import com.musdev.lingonote.core.data.repository.LocalRepository
+import com.musdev.lingonote.core.data.repository.LocalRepositoryImpl
 import com.musdev.lingonote.core.data.repository.RemoteRepository
 import com.musdev.lingonote.core.data.repository.RemoteRepositoryImpl
-import com.musdev.lingonote.core.data.repository.Repository
 import com.musdev.lingonote.core.data.services.ApiService
-import dagger.Binds
+import com.musdev.lingonote.core.data.services.DbService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import javax.inject.Inject
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
 object RepositoryModule {
-    //@Inject lateinit var remoteRepositoryImpl: RemoteRepositoryImpl
-
     @Singleton
     @Provides
     fun provideApiService(): ApiService {
@@ -25,7 +24,19 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRepository(): RemoteRepository {
-        return RemoteRepositoryImpl(provideApiService())
+    fun provideRemoteRepository(apiService: ApiService): RemoteRepository {
+        return RemoteRepositoryImpl(apiService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDBService(context: Context): DbService {
+        return DbService(context)
+    }
+
+    @Singleton
+    @Provides
+    fun provideLocalRepository(dbService: DbService): LocalRepository {
+        return LocalRepositoryImpl(dbService)
     }
 }
