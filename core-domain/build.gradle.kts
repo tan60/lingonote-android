@@ -56,4 +56,8 @@ dependencies {
     //hilt
     implementation(libs.hilt.android)
     kapt(libs.hilt.android.compiler)
+
+    //joda-time
+    implementation(libs.joda.time)
+
 }

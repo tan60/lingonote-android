@@ -16,6 +16,7 @@ ktor = "2.2.4"
 moshi="1.14.0"
 androidxRoom="2.5.0"
 hilt = "2.44"
+joda-time = "2.9.9"
 
 [libraries]
 android-gradlePlugin = { group = "com.android.tools.build", name = "gradle", version.ref = "androidGradlePlugin" }
@@ -42,7 +43,7 @@ moshi = { module = "com.squareup.moshi:moshi-kotlin", version.ref = "moshi" }
 moshi-codegen = { module = "com.squareup.moshi:moshi-kotlin-codegen", version.ref = "moshi" }
 hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt"}
 hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "hilt"}
-
+joda-time = { group = "joda-time", name = "joda-time", version.ref = "joda-time"}
 
 [plugins]
 com-android-application = { id = "com.android.application", version.ref = "androidGradlePlugin" }
@@ -52,6 +53,7 @@ kotlin-plugin-serialization = {id = "org.jetbrains.kotlin.plugin.serialization",
 org-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 com-google-devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp"}
 hilt = { id = "com.google.dagger.hilt.android", version.ref = "hilt"}
+
 
 
 [bundles]

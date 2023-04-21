@@ -1,18 +1,18 @@
 package com.musdev.lingonote.core.data.repository
 
-import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
-import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.dto.AchieveDto
+import com.musdev.lingonote.core.data.services.database.dto.NoteDto
 
 interface LocalRepository {
-    suspend fun fetchMyNotes(uid: Int): List<DbNoteEntity> = listOf()
+    suspend fun fetchNotes(uid: Int): List<NoteDto> = listOf()
 
-    suspend fun postNote(note: DbNoteEntity)
+    suspend fun postNote(note: NoteDto)
 
-    suspend fun updateNote(note: DbNoteEntity): Int
+    suspend fun updateNote(note: NoteDto): Int
 
     suspend fun fetchTotalPostedCount(uid: Int) : Int
 
-    suspend fun fetchFirstNote(uid: Int): DbNoteEntity
+    suspend fun fetchFirstNote(uid: Int): NoteDto
 
-    suspend fun fetchAchieve(uid: Int): List<DbAchieveEntity> = listOf()
+    suspend fun fetchAchieve(uid: Int): List<AchieveDto> = listOf()
 }

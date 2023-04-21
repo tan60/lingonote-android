@@ -4,11 +4,11 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.dto.NoteDto
 
 @androidx.room.Database(
     version = 1,
-    entities = [DbNoteEntity::class]
+    entities = [NoteDto::class]
 )
 
 abstract class RoomDB : RoomDatabase() {

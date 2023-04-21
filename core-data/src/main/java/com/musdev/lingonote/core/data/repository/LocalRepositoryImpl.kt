@@ -1,8 +1,8 @@
 package com.musdev.lingonote.core.data.repository
 
 import com.musdev.lingonote.core.data.services.DbService
-import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
-import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.dto.AchieveDto
+import com.musdev.lingonote.core.data.services.database.dto.NoteDto
 import javax.inject.Inject
 
 class LocalRepositoryImpl @Inject constructor(
@@ -11,15 +11,15 @@ class LocalRepositoryImpl @Inject constructor(
 
     private val dbNoteDao by lazy { dbService.noteDBDao}
 
-    override suspend fun fetchMyNotes(uid: Int): List<DbNoteEntity> {
+    override suspend fun fetchNotes(uid: Int): List<NoteDto> {
         return dbNoteDao.getAllNotes()
     }
 
-    override suspend fun postNote(note: DbNoteEntity) {
+    override suspend fun postNote(note: NoteDto) {
         dbNoteDao.insert(note)
     }
 
-    override suspend fun updateNote(note: DbNoteEntity): Int {
+    override suspend fun updateNote(note: NoteDto): Int {
         return dbNoteDao.upsert(note)
     }
 
@@ -27,11 +27,11 @@ class LocalRepositoryImpl @Inject constructor(
         return dbNoteDao.getTotalEntityCount()
     }
 
-    override suspend fun fetchFirstNote(uid: Int): DbNoteEntity {
+    override suspend fun fetchFirstNote(uid: Int): NoteDto {
         return dbNoteDao.getFirstEntity()
     }
 
-    override suspend fun fetchAchieve(uid: Int): List<DbAchieveEntity> {
+    override suspend fun fetchAchieve(uid: Int): List<AchieveDto> {
         return dbNoteDao.getAchieves()
     }
 }

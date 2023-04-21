@@ -5,18 +5,18 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.musdev.lingonote.core.data.services.database.entity.DbAchieveEntity
-import com.musdev.lingonote.core.data.services.database.entity.DbNoteEntity
+import com.musdev.lingonote.core.data.services.database.dto.AchieveDto
+import com.musdev.lingonote.core.data.services.database.dto.NoteDto
 
 @Dao
 interface NoteDBDao {
     //특정 노트 하나만 질의
     @Query("SELECT * FROM note_table WHERE uid = :uid")
-    suspend fun getEntity(uid: Int) : DbNoteEntity
+    suspend fun getEntity(uid: Int) : NoteDto
 
     //모든 노트 질의 - 나중에 offset, limit로 가져오게 변경 필요함
     @Query("SELECT * FROM note_table ORDER BY uid DESC")
-    suspend fun getAllNotes() : List<DbNoteEntity>
+    suspend fun getAllNotes() : List<NoteDto>
 
 
     @Query("SELECT MAX(uid) as max FROM note_table")
@@ -24,12 +24,12 @@ interface NoteDBDao {
 
     //노트 생성
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(noteEntity: DbNoteEntity)
+    suspend fun insert(noteEntity: NoteDto)
 
 
     //노트 수정(업데이트)
     @Transaction
-    suspend fun upsert(noteEntity: DbNoteEntity): Int {
+    suspend fun upsert(noteEntity: NoteDto): Int {
         var entity = getEntity(noteEntity.uid)
 
         entity.run {
@@ -49,9 +49,9 @@ interface NoteDBDao {
 
     //최초 노트 질의
     @Query("SELECT * FROM note_table ORDER BY uid ASC LIMIT 1")
-    suspend fun getFirstEntity() : DbNoteEntity
+    suspend fun getFirstEntity() : NoteDto
 
     //날짜 별로 작성한 노트의 갯수 질의
     @Query("SELECT date(post_issue_date) AS date, COUNT(*) AS count FROM note_table GROUP BY date(post_issue_date)")
-    suspend fun getAchieves() : List<DbAchieveEntity>
+    suspend fun getAchieves() : List<AchieveDto>
 }
