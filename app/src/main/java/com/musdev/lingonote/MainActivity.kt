@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
+import com.musdev.lingonote.presentation.home.HomeScreen
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -56,12 +57,14 @@ class MainActivity : ComponentActivity() {
         setContent {
             LingoNoteTheme {
                 // A surface container using the 'background' color from the theme
-                Surface(
+                /*Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Greeting(name)
-                }
+                }*/
+
+                HomeScreen()
             }
         }
     }
