@@ -12,7 +12,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
+import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
+import com.musdev.lingonote.core.domain.usecases.NoteUseCase
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -28,21 +30,27 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var correctContentUseCase: CorrectContentUseCase
 
+    @Inject
+    lateinit var noteUseCase: NoteUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
 
         lifecycleScope.launch(Dispatchers.IO) {
-            var correctEntity = correctContentUseCase.correctMyContent(content)
-            when (correctEntity.isSuccess) {
-                true -> {
-                    Log.d(TAG, correctEntity.correctedContent)
-                }
-                false -> {
-                    Log.d(TAG, correctEntity.errorMessage)
-                }
+            //correctContentTest(content)
+
+            val startIndex = getTotalCountTest()
+
+            for (i in startIndex.. startIndex + 3) {
+                postNoteTest("test topic $i", "test content $i")
             }
+
+            fetchNotesTest()
+            updateNoteTest(1, "update topic 0", "update content 0")
+            getFirstNoteTest()
+
         }
 
         setContent {
@@ -57,7 +65,54 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+    private suspend fun correctContentTest(content: String) {
+        var correctEntity = correctContentUseCase.correctMyContent(content)
+        when (correctEntity.isSuccess) {
+            true -> {
+                Log.d(TAG, correctEntity.correctedContent)
+            }
+            false -> {
+                Log.d(TAG, correctEntity.errorMessage)
+            }
+        }
+    }
+
+    private suspend fun postNoteTest(topic: String, content: String) {
+        val noteEntity = NoteEntity().apply {
+            this.topic = topic
+            this.content = content
+        }
+
+        noteUseCase.postNote(noteEntity)
+    }
+
+    private suspend fun updateNoteTest(postNo: Int, topic: String, content: String) {
+        val noteEntity = NoteEntity().apply {
+            this.postNo = postNo
+            this.topic = topic
+            this.content = content
+        }
+
+        noteUseCase.updateNote(noteEntity)
+    }
+
+    private suspend fun getTotalCountTest(): Int {
+        return noteUseCase.getTotalNoteCount()
+    }
+    private suspend fun getFirstNoteTest() {
+        Log.d(TAG, "First Note: ${noteUseCase.getFirstNote()}")
+    }
+
+    private suspend fun fetchNotesTest() {
+        val noteEntities = noteUseCase.fetchNotes()
+
+        for (i in noteEntities.indices) {
+            Log.d(TAG, noteEntities[i].toString())
+        }
+    }
 }
+
 
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {

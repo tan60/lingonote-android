@@ -4,18 +4,18 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-import com.musdev.lingonote.core.data.services.database.dto.NoteDto
+import com.musdev.lingonote.core.data.services.database.dto.Note
 
 @androidx.room.Database(
     version = 1,
-    entities = [NoteDto::class]
+    entities = [Note::class]
 )
 
 abstract class RoomDB : RoomDatabase() {
     abstract fun noteItemDao() : NoteDBDao
 
     companion object {
-        private const val DB_NAME = "note-db"
+        private const val DB_NAME = "lingonote-db"
 
         @Volatile
         private var _instances: RoomDB? = null

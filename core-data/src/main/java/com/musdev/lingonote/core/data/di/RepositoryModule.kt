@@ -1,6 +1,7 @@
 package com.musdev.lingonote.core.data.di
 
 import android.content.Context
+import android.content.SharedPreferences
 import com.musdev.lingonote.core.data.repository.LocalRepository
 import com.musdev.lingonote.core.data.repository.LocalRepositoryImpl
 import com.musdev.lingonote.core.data.repository.RemoteRepository
@@ -24,14 +25,14 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideRemoteRepository(apiService: ApiService): RemoteRepository {
-        return RemoteRepositoryImpl(apiService)
+    fun provideDBService(context: Context): DbService {
+        return DbService(context)
     }
 
     @Singleton
     @Provides
-    fun provideDBService(context: Context): DbService {
-        return DbService(context)
+    fun provideRemoteRepository(apiService: ApiService): RemoteRepository {
+        return RemoteRepositoryImpl(apiService)
     }
 
     @Singleton

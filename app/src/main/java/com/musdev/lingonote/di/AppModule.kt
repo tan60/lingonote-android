@@ -22,15 +22,13 @@ object AppModule {
 
     @Singleton
     @Provides
+    fun provideApplicationContext(@ApplicationContext context: Context): Context {
+        return context
+    }
+/*
+    @Singleton
+    @Provides
     fun provideSharedPreference(sharedPreferences: SharedPreferences): SharedPreferences {
         return sharedPreferences
-    }
-
-    private lateinit var preferences: SharedPreferences
-
-    fun init(context: Context) {
-        val name = "lingonote-perfence"
-        preferences = context.getSharedPreferences(name, Activity.MODE_PRIVATE)
-
-    }
+    }*/
 }

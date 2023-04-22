@@ -1,8 +1,8 @@
 package com.musdev.lingonote.core.data.repository
 
 import com.musdev.lingonote.core.data.services.DbService
-import com.musdev.lingonote.core.data.services.database.dto.AchieveDto
-import com.musdev.lingonote.core.data.services.database.dto.NoteDto
+import com.musdev.lingonote.core.data.services.database.dto.Achieve
+import com.musdev.lingonote.core.data.services.database.dto.Note
 import javax.inject.Inject
 
 class LocalRepositoryImpl @Inject constructor(
@@ -11,27 +11,27 @@ class LocalRepositoryImpl @Inject constructor(
 
     private val dbNoteDao by lazy { dbService.noteDBDao}
 
-    override suspend fun fetchNotes(uid: Int): List<NoteDto> {
+    override suspend fun fetchNotes(): List<Note> {
         return dbNoteDao.getAllNotes()
     }
 
-    override suspend fun postNote(note: NoteDto) {
-        dbNoteDao.insert(note)
+    override suspend fun postNote(note: Note) {
+        dbNoteDao.insertNote(note)
     }
 
-    override suspend fun updateNote(note: NoteDto): Int {
-        return dbNoteDao.upsert(note)
+    override suspend fun updateNote(note: Note) {
+        return dbNoteDao.upsertNote(note)
     }
 
-    override suspend fun fetchTotalPostedCount(uid: Int): Int {
-        return dbNoteDao.getTotalEntityCount()
+    override suspend fun fetchTotalPostedCount(): Int {
+        return dbNoteDao.getTotalNotesCount()
     }
 
-    override suspend fun fetchFirstNote(uid: Int): NoteDto {
-        return dbNoteDao.getFirstEntity()
+    override suspend fun fetchFirstNote(): Note {
+        return dbNoteDao.getFirstNote()
     }
 
-    override suspend fun fetchAchieve(uid: Int): List<AchieveDto> {
+    override suspend fun fetchAchieve(): List<Achieve> {
         return dbNoteDao.getAchieves()
     }
 }

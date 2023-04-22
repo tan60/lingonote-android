@@ -1,57 +1,50 @@
 package com.musdev.lingonote.core.data.services.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import com.musdev.lingonote.core.data.services.database.dto.AchieveDto
-import com.musdev.lingonote.core.data.services.database.dto.NoteDto
+import androidx.room.Update
+import com.musdev.lingonote.core.data.services.database.dto.Achieve
+import com.musdev.lingonote.core.data.services.database.dto.Note
 
 @Dao
 interface NoteDBDao {
     //특정 노트 하나만 질의
-    @Query("SELECT * FROM note_table WHERE uid = :uid")
-    suspend fun getEntity(uid: Int) : NoteDto
+    @Query("SELECT * FROM note_table WHERE id = :uid")
+    suspend fun getEntity(uid: Int) : Note?
 
     //모든 노트 질의 - 나중에 offset, limit로 가져오게 변경 필요함
-    @Query("SELECT * FROM note_table ORDER BY uid DESC")
-    suspend fun getAllNotes() : List<NoteDto>
+    @Query("SELECT * FROM note_table ORDER BY id DESC")
+    suspend fun getAllNotes() : List<Note>
 
+    @Query("SELECT MAX(id) as max FROM note_table")
+    suspend fun getLastNoteIndex(): Int
 
-    @Query("SELECT MAX(uid) as max FROM note_table")
-    suspend fun getLastIndex(): Int
-
-    //노트 생성
+    //포스트 생성
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(noteEntity: NoteDto)
+    suspend fun insertNote(noteEntity: Note)
 
 
-    //노트 수정(업데이트)
-    @Transaction
-    suspend fun upsert(noteEntity: NoteDto): Int {
-        var entity = getEntity(noteEntity.uid)
+    //포스트 수정
+    @Update
+    suspend fun upsertNote(note: Note)
 
-        entity.run {
-            topic = noteEntity.topic
-            content = noteEntity.content
-            improved = noteEntity.improved
-            improvedType = noteEntity.improvedType
-            fixedDateTime = noteEntity.fixedDateTime
-        }
-
-        return noteEntity.uid
-    }
+    @Delete
+    fun deleteNote(noteEntity: Note)
 
     //모든 노트의 갯수 질의
     @Query("SELECT COUNT(*) FROM note_table")
-    suspend fun getTotalEntityCount() : Int
+    suspend fun getTotalNotesCount() : Int
 
     //최초 노트 질의
-    @Query("SELECT * FROM note_table ORDER BY uid ASC LIMIT 1")
-    suspend fun getFirstEntity() : NoteDto
+    //@Query("SELECT * FROM note_table ORDER BY id DESC LIMIT 1")
+    @Query("SELECT * FROM note_table ORDER BY id ASC LIMIT 1")
+    suspend fun getFirstNote() : Note
 
     //날짜 별로 작성한 노트의 갯수 질의
-    @Query("SELECT date(post_issue_date) AS date, COUNT(*) AS count FROM note_table GROUP BY date(post_issue_date)")
-    suspend fun getAchieves() : List<AchieveDto>
+    @Query("SELECT date(issue_date) AS date, COUNT(*) AS count FROM note_table GROUP BY date(issue_date)")
+    suspend fun getAchieves() : List<Achieve>
 }
