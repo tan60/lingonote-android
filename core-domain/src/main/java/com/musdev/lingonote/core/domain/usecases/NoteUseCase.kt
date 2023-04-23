@@ -11,7 +11,7 @@ import javax.inject.Inject
 class NoteUseCase @Inject constructor(
     private val localRepository: LocalRepository
 ) {
-    suspend fun fetchNotes(): List<NoteEntity> {
+    suspend fun fetchNotes(): MutableList<NoteEntity> {
         val notes = localRepository.fetchNotes()
 
         var noteEntities: MutableList<NoteEntity> = mutableListOf()
