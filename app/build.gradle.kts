@@ -68,8 +68,6 @@ dependencies {
     //implementation(libs.activity.compose)
     implementation("androidx.activity:activity-compose:1.5.1")
 
-
-
     /*implementation(platform("androidx.compose:compose-bom:2022.10.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")

@@ -42,7 +42,7 @@ class HomeActivity : ComponentActivity() {
             val startIndex = getTotalCountTest()
 
             for (i in startIndex.. startIndex + 3) {
-                postNoteTest("test topic $i title title sadklfjlksajdflkjsalfkjlsakdjflkasjdfkl", "test content $i sdfksakldfjlksjadfkljsldkjfkj lksajdfkljsadflkjsalkdjkl ksldjafkljsdafkljsadlkfj ksjdflkjasdflkj")
+                postNoteTest("This is dummy topic $i \nprovided by the test code", "This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. ")
             }
         }
 
