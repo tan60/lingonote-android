@@ -57,14 +57,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             LingoNoteTheme {
                 // A surface container using the 'background' color from the theme
-                /*Surface(
+                Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting(name)
-                }*/
-
-                HomeScreen()
+                    HomeScreen()
+                }
             }
         }
     }

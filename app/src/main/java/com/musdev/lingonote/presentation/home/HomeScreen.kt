@@ -22,9 +22,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.musdev.lingonote.R
+import com.musdev.lingonote.ui.theme.pretendard
 
 @Composable
 fun HomeScreen() {
@@ -37,19 +40,22 @@ fun GreetingSection() {
         verticalArrangement = Arrangement.Center,
         modifier = Modifier
             .padding(24.dp)
-            .background(Color.Green)
             .fillMaxWidth()
             .fillMaxHeight()
     ) {
         Text(
-            text = "꾸준한 작문으로\n당신의 영어를\n향상 시키세요.",
-            style = MaterialTheme.typography.headlineLarge
+            text = "꾸준한 작문으로\n당신의 영어를\n향상 시켜보세요.",
+            lineHeight = 38.sp,
+            fontSize = 36.sp,
+            fontFamily = pretendard,
+            fontWeight = FontWeight(1)
         )
         Text(
             text = "하루 영작",
             style = TextStyle(
                 fontSize = 50.sp,
-                fontWeight = FontWeight(3)
+                fontWeight = FontWeight(4),
+                fontFamily = pretendard
             )
         )
         Spacer(modifier = Modifier
@@ -58,7 +64,7 @@ fun GreetingSection() {
         Box(
             modifier = Modifier
                 .clip(RoundedCornerShape(16.dp))
-                .background(Color.Red)
+                .background(Color(0xFFFAFAFA))
                 .fillMaxWidth()
         ) {
             Row(
@@ -68,14 +74,16 @@ fun GreetingSection() {
                     painter = painterResource(
                         id = R.drawable.ic_baseline_edit_24
                     ),
-                    contentDescription = "Play",
-                    tint = Color.Black,
+                    contentDescription = "시작하기",
+                    tint = MaterialTheme.colorScheme.onSecondary,
                     modifier = Modifier.padding(start = 15.dp),
                 )
                 Text(
-                    modifier = Modifier.padding(15.dp),
+                    modifier = Modifier.padding(20.dp),
                     text = "지금 시작해 볼까요?",
-                    style = TextStyle(fontSize = 18.sp)
+                    style = TextStyle(fontSize = 18.sp),
+                    color = MaterialTheme.colorScheme.onSecondary,
+                    fontFamily = pretendard
                 )
             }
         }
@@ -87,7 +95,9 @@ fun GreetingSection() {
             text = "AI 교정으로 더 나은 표현을 익혀보세요.",
             style = TextStyle(
                 fontSize = 14.sp,
-                fontWeight = FontWeight(3)
+                fontWeight = FontWeight(3),
+                color = MaterialTheme.colorScheme.error,
+                fontFamily = pretendard
             )
         )
         Spacer(modifier = Modifier
