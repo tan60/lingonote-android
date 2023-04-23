@@ -3,8 +3,8 @@ package com.musdev.lingonote.presentation.home
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
+import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -29,8 +30,10 @@ class HomeActivity : ComponentActivity() {
     @Inject
     lateinit var noteUseCase: NoteUseCase
 
-    @Inject lateinit var viewModel: HomeViewModel
+    @Inject lateinit var viewModel: NotesViewModel
 
+
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,12 +53,11 @@ class HomeActivity : ComponentActivity() {
         }
         setContent {
             LingoNoteTheme {
-                // A surface container using the 'background' color from the theme
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
                     HomeScreen(modifier = Modifier.fillMaxSize(), viewModel)
                 }
             }

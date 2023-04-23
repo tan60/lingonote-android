@@ -1,4 +1,4 @@
-package com.musdev.lingonote.presentation.home
+package com.musdev.lingonote.presentation.notes
 
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 

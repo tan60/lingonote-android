@@ -1,4 +1,4 @@
-package com.musdev.lingonote.presentation.home
+package com.musdev.lingonote.presentation.notes
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,7 +9,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 
 /**
@@ -17,7 +16,7 @@ import androidx.compose.runtime.setValue
  * UI를 그리기 위한 데이터 혹은 상태 변경 값에 따라 UiState를 변경해 준다.
  * UI를 직접 접근해서 조작하면 안됨
  */
-class HomeViewModel @Inject constructor(
+class NotesViewModel @Inject constructor(
     private val noteUseCase: NoteUseCase
 ) : ViewModel() {
     var uiState by mutableStateOf(HomeUiState())

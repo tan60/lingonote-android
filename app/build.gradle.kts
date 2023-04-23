@@ -55,22 +55,37 @@ android {
 }
 
 dependencies {
-    //hilt
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-
     implementation(project(":core-domain"))
 
-    implementation("androidx.core:core-ktx:1.8.0")
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.3.1")
+    //hilt
+    implementation(libs.hilt.android)
+    implementation(libs.androidx.navigation.compose)
+    kapt(libs.hilt.android.compiler)
+
+
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    //implementation(libs.activity.compose)
     implementation("androidx.activity:activity-compose:1.5.1")
-    implementation(platform("androidx.compose:compose-bom:2022.10.00"))
+
+
+
+    /*implementation(platform("androidx.compose:compose-bom:2022.10.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material3:material3")*/
 
+    implementation(platform(libs.androidx.compose.bom))
+    api(libs.androidx.compose.foundation)
+    api(libs.androidx.compose.foundation.layout)
+    api(libs.androidx.compose.ui)
+    api(libs.androidx.compose.ui.graphics)
+    api(libs.androidx.compose.material3)
+    api(libs.androidx.compose.ui.tooling.preview)
+    api(libs.androidx.compose.ui.util)
 
+    implementation("androidx.compose.material:material:1.4.2")
 
 
     //주석 프로세서를 KSP로 사용

@@ -1,220 +1,159 @@
 package com.musdev.lingonote.presentation.home
 
-import android.content.res.Resources.Theme
-import android.graphics.Paint
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CardElevation
-import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.contentColorFor
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.musdev.lingonote.R
-import com.musdev.lingonote.core.domain.entities.NoteEntity
-import com.musdev.lingonote.ui.theme.pretendard
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
+import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
+import com.musdev.lingonote.presentation.notes.NotesViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-    viewModel: HomeViewModel) {
-    if (viewModel.uiState.isFetchingNotes) {
-        Box(modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
+    viewModel: NotesViewModel
+) {
+    val navController = rememberNavController()
+
+    Scaffold(
+        bottomBar = {
+            BottomBar(navController = navController)
         }
-    } else if (viewModel.uiState.noteItems.size > 0) {
-        NoteListSection(noteEntities = viewModel.uiState.noteItems)
-    } else {
-        GreetingSection()
+
+    ) { contentPadding ->
+        BottomNavGraph(navController = navController, modifier = modifier, viewModel = viewModel)
     }
 }
 
 @Composable
-fun NoteListSection(noteEntities: List<NoteEntity>) {
-    Column(modifier = Modifier.fillMaxWidth()) {
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(1),
-            //contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp),
-            modifier = Modifier.fillMaxHeight()
-        ) {
-            items(noteEntities.size) {
-                NoteItem(noteEntity = noteEntities[it])
-            }
-        }
-    }
-}
-
-@Composable
-fun NoteItem(noteEntity: NoteEntity) {
-    val customCardColors = CardDefaults.cardElevation(
-        defaultElevation = 10.dp,
-        pressedElevation = 2.dp,
-        focusedElevation = 4.dp
+fun BottomBar(navController: NavController) {
+    val screens = listOf(
+        BottomBarScreen.Home,
+        BottomBarScreen.Achieve
     )
-    Card(
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    Row(
         modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
-            //.clip(RoundedCornerShape(16.dp))
-        shape = CardDefaults.shape,
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primary
-        ),
-        elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+            //.padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp)
+            .background(MaterialTheme.colorScheme.primary)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp),
-        ) {
-            Text(
-                text = noteEntity.topic,
-                style = TextStyle(
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    fontFamily = pretendard,
-                    color = MaterialTheme.colorScheme.onPrimary
-                ),
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
+        screens.forEach { screen ->
+            AddItem(
+                screen = screen,
+                currentDestination = currentDestination,
+                navController = navController
             )
-            Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            Text(
-                text = noteEntity.content,
-                style = TextStyle(
-                    fontSize = 21.sp,
-                    fontFamily = pretendard,
-                    color = MaterialTheme.colorScheme.onPrimary
-                    ),
-                maxLines = 3,
-                overflow = TextOverflow.Ellipsis
-            )
-            Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
-            Row(
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                val correctedType =
-                    if (noteEntity.correctedContent.isNotEmpty()) "AI Corrected" else ""
-                Text(
-                    text = correctedType,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = pretendard,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-                )
-                Text(
-                    text = noteEntity.issueDate,
-                    style = TextStyle(
-                        fontSize = 16.sp,
-                        fontFamily = pretendard,
-                        //color = MaterialTheme.colorScheme.onSecondary
-                    )
-                )
-            }
         }
     }
+
+    /*BottomNavigation {
+        screens.forEach {screen ->
+            AddItem(screen = screen, currentDestination = currentDestination, navController = navController)
+        }
+    }*/
 }
 
 @Composable
-fun GreetingSection() {
-    Column(
-        verticalArrangement = Arrangement.Center,
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavController
+) {
+
+    val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+
+    val background =
+        if (selected) MaterialTheme.colorScheme.primary.copy(alpha = 0.6f) else Color.Transparent
+
+    val contentColor =
+        if (selected) Color.White else Color.Black
+
+    Box(
         modifier = Modifier
-            .padding(24.dp)
-            .fillMaxWidth()
-            .fillMaxHeight()
+            .padding(10.dp)
+            .height(40.dp)
+            .clip(CircleShape)
+            .background(background)
+            .clickable(onClick = {
+                navController.navigate(screen.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
+                }
+            })
     ) {
-        Text(
-            text = "꾸준한 작문으로\n당신의 영어를\n향상 시켜보세요.",
-            lineHeight = 40.sp,
-            fontSize = 38.sp,
-            fontFamily = pretendard,
-            fontWeight = FontWeight(1)
-        )
-        Text(
-            text = "하루 영작",
-            style = TextStyle(
-                fontSize = 50.sp,
-                fontWeight = FontWeight(8),
-                fontFamily = pretendard
-            )
-        )
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(16.dp))
-        Box(
+        Row(
             modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFFAFAFA))
-                .fillMaxWidth()
+                .padding(start = 10.dp, end = 10.dp, top = 8.dp, bottom = 8.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(4.dp)
         ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.ic_baseline_edit_24
-                    ),
-                    contentDescription = "시작하기",
-                    tint = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier.padding(start = 15.dp),
-                )
+            Icon(
+                painter = painterResource(id = screen.iconId/*if (selected) screen.icon_focused else screen.icon*/),
+                contentDescription = "icon",
+                tint = contentColor
+            )
+            AnimatedVisibility(visible = selected) {
                 Text(
-                    modifier = Modifier.padding(20.dp),
-                    text = "지금 시작해 볼까요?",
-                    style = TextStyle(fontSize = 18.sp),
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontFamily = pretendard
+                    text = screen.title,
+                    color = contentColor
                 )
             }
         }
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp))
-        Text(
-            modifier = Modifier.align(Alignment.End),
-            text = "AI 교정으로 더 나은 표현을 익혀보세요.",
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight(3),
-                color = MaterialTheme.colorScheme.error,
-                fontFamily = pretendard
-            )
-        )
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp))
     }
+
+    /*BottomNavigationItem(
+        modifier = Modifier.height(50.dp),
+        label = {
+            Column() {
+                Spacer(modifier = Modifier.height(5.dp))
+                Text(text = screen.title)
+            }
+
+        },
+        icon = {
+            Icon(
+                imageVector = screen.icon,
+                contentDescription = "Navigation Icon"
+            )
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
+        onClick = {
+            navController.navigate(screen.route)
+        }
+    )*/
 }
+
