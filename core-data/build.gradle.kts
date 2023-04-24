@@ -3,7 +3,6 @@ import org.jetbrains.kotlin.kapt3.base.Kapt.kapt
 plugins {
     alias(libs.plugins.com.android.library)
     alias(libs.plugins.org.jetbrains.kotlin.android)
-    //alias(libs.plugins.com.google.devtools.ksp)
     alias(libs.plugins.kotlin.plugin.serialization)
     alias(libs.plugins.hilt)
     kotlin("kapt")
