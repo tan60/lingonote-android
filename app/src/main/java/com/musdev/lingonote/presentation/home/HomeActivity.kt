@@ -38,13 +38,13 @@ class HomeActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         //test code
-        lifecycleScope.launch(Dispatchers.IO) {
+        /*lifecycleScope.launch(Dispatchers.IO) {
             val startIndex = getTotalCountTest()
 
             for (i in startIndex.. startIndex + 3) {
                 postNoteTest("This is dummy topic $i \nprovided by the test code", "This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. ")
             }
-        }
+        }*/
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
