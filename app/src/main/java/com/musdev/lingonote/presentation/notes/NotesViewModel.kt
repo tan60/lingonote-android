@@ -1,5 +1,6 @@
 package com.musdev.lingonote.presentation.notes
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -10,6 +11,7 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 import androidx.compose.runtime.setValue
+import com.musdev.lingonote.presentation.home.TAG
 
 /**
  * viewModel은 Domain Layer 이용해 비즈니스 로직을 수행
@@ -24,17 +26,37 @@ class NotesViewModel @Inject constructor(
 
     private var fetchJob: Job? = null
 
-    fun fetchNotes() {
-        fetchJob?.cancel()
-        uiState = uiState.copy(isFetchingNotes = true)
+    fun fetchNotesAtFirst() {
+        Log.d(TAG, "fetchNotesAtFirst()")
+        when (uiState.noteItems.isEmpty()) {
+            true -> {
+                fetchNotes()
+            }
+            else -> {
+                //items are exist
+            }
+        }
+    }
+    private fun fetchNotes() {
+        Log.d(TAG, "fetchNotes()")
+        when (fetchJob == null) {
+            true -> {
+                uiState = uiState.copy(isFetchingNotes = true)
+                fetchJob = viewModelScope.launch {
+                    try {
+                        val items = noteUseCase.fetchNotes() //fetch data
+                        uiState = uiState.copy(noteItems = items) //update data state
+                        uiState = uiState.copy(isFetchingNotes = false) //update loading state
 
-        fetchJob = viewModelScope.launch {
-            try {
-                val items = noteUseCase.fetchNotes() //fetch data
-                uiState = uiState.copy(noteItems = items) //update data state
-                uiState = uiState.copy(isFetchingNotes = false) //update loading state
-            } catch (ioe: IOException) {
-                uiState = uiState.copy(isFetchingNotes = false) //update loading state
+                        Log.d(TAG, "fetchNotes()::get response")
+                    } catch (ioe: IOException) {
+                        uiState = uiState.copy(isFetchingNotes = false) //update loading state
+                    }
+                }
+            }
+
+            false -> {
+                Log.d(TAG, "fetchNotes()::job is working")
             }
         }
     }

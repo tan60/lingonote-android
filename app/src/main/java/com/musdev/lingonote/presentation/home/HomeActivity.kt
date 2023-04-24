@@ -21,6 +21,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val TAG = "AppDebug"
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
 
@@ -32,8 +33,6 @@ class HomeActivity : ComponentActivity() {
 
     @Inject lateinit var viewModel: NotesViewModel
 
-
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,16 +45,15 @@ class HomeActivity : ComponentActivity() {
             }
         }*/
 
-        lifecycleScope.launch {
+        /*lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.fetchNotes()
             }
-        }
+        }*/
         setContent {
             LingoNoteTheme {
                 Surface(
-                    modifier = Modifier
-                        .fillMaxSize(),
+                    modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
                     HomeScreen(modifier = Modifier.fillMaxSize(), viewModel)

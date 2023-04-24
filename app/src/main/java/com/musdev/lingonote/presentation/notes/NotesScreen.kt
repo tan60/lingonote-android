@@ -1,9 +1,11 @@
 package com.musdev.lingonote.presentation.notes
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -33,21 +35,32 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.NoteEntity
+import com.musdev.lingonote.presentation.home.TAG
 import com.musdev.lingonote.ui.theme.pretendard
+
+
 
 @Composable
 fun NotesScreen(
     modifier: Modifier,
     viewModel: NotesViewModel
 ) {
+    Log.d(TAG, "NoteScreen()")
+    viewModel.fetchNotesAtFirst()
 
     if (viewModel.uiState.isFetchingNotes) {
+        Log.d(TAG, "NoteScreen():show circularProgressIndicator")
+        //display loading indicator
         Box(modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     } else if (viewModel.uiState.noteItems.size > 0) {
+        Log.d(TAG, "NoteScreen():show NoteListSection")
+        //display Note List
         NoteListSection(noteEntities = viewModel.uiState.noteItems)
     } else {
+        //display Greeting
+        Log.d(TAG, "NoteScreen():show GreetingSection")
         GreetingSection()
     }
 }
@@ -58,7 +71,7 @@ fun NoteListSection(noteEntities: List<NoteEntity>) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
             //contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp),
-            modifier = Modifier.fillMaxHeight()
+            modifier = Modifier.fillMaxHeight().padding(bottom = 60.dp),
         ) {
             items(noteEntities.size) {
                 NoteItem(noteEntity = noteEntities[it])
@@ -89,6 +102,7 @@ fun NoteItem(noteEntity: NoteEntity) {
                 .fillMaxWidth()
                 .padding(24.dp),
         ) {
+            //topic
             Text(
                 text = noteEntity.topic,
                 style = TextStyle(
@@ -103,12 +117,13 @@ fun NoteItem(noteEntity: NoteEntity) {
             Spacer(modifier = Modifier
                 .fillMaxWidth()
                 .height(8.dp))
+            //content
             Text(
                 text = noteEntity.content,
                 style = TextStyle(
                     fontSize = 21.sp,
                     fontFamily = pretendard,
-                    fontWeight = FontWeight.ExtraLight,
+                    fontWeight = FontWeight.Light,
                     color = MaterialTheme.colorScheme.onPrimary
                 ),
                 maxLines = 3,
@@ -123,21 +138,24 @@ fun NoteItem(noteEntity: NoteEntity) {
             ) {
                 val correctedType =
                     if (noteEntity.correctedContent.isNotEmpty()) "AI Corrected" else ""
+                //corrected type
                 Text(
                     text = correctedType,
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = pretendard,
-                        fontWeight = FontWeight.ExtraLight,
+                        fontWeight = FontWeight.Light,
                         color = MaterialTheme.colorScheme.secondary
                     )
                 )
+
+                //issue date
                 Text(
                     text = noteEntity.issueDate,
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontFamily = pretendard,
-                        fontWeight = FontWeight.ExtraLight,
+                        fontWeight = FontWeight.Light,
                         //color = MaterialTheme.colorScheme.onSecondary
                     )
                 )

@@ -1,5 +1,6 @@
 package com.musdev.lingonote.presentation.home
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -7,11 +8,17 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -30,6 +37,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.musdev.lingonote.R
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
 import com.musdev.lingonote.presentation.notes.NotesViewModel
@@ -40,15 +48,69 @@ fun HomeScreen(
     modifier: Modifier,
     viewModel: NotesViewModel
 ) {
+    Log.d(TAG, "HomeScreen()")
     val navController = rememberNavController()
 
     Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                containerColor = MaterialTheme.colorScheme.secondary,
+                onClick = {
+
+                }
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(16.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                        contentDescription = "icon",
+                        tint = MaterialTheme.colorScheme.onSecondary
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("New Note")
+                }
+
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomAppBar(
+                modifier = Modifier
+                    .height(65.dp),
+
+            ) {
+                BottomBar(navController = navController)
+            }
         }
 
     ) { contentPadding ->
         BottomNavGraph(navController = navController, modifier = modifier, viewModel = viewModel)
+    }
+}
+
+@Composable
+fun Fab() {
+    FloatingActionButton(
+        containerColor = MaterialTheme.colorScheme.secondary,
+        onClick = {
+
+        }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                contentDescription = "icon",
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("New Note")
+        }
+
     }
 }
 
@@ -58,6 +120,8 @@ fun BottomBar(navController: NavController) {
         BottomBarScreen.Home,
         BottomBarScreen.Achieve
     )
+    Log.d(TAG, "BottomBar()")
+
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
@@ -91,12 +155,10 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavController
 ) {
-
+    Log.d(TAG, "AddItem()")
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
-
     val background =
         if (selected) MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f) else Color.Transparent
-
     val contentColor =
         if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
 

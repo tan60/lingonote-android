@@ -8,6 +8,7 @@ sealed class BottomBarScreen(
     val title: String,
     @DrawableRes val iconId: Int
 ) {
+    //singleton
     object Home : BottomBarScreen(
         route = "home",
         title = "Home",
