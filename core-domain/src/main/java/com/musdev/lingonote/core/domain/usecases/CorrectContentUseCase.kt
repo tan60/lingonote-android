@@ -24,8 +24,8 @@ class CorrectContentUseCase @Inject constructor (
          */
 
         val apiUrl = "https://api.openai.com/v1/edits"
-        val apiKey = "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"//working key
-        //val apiKey = "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"//invalid key for test
+
+        val apiKey = "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"//invalid key for test
 
         var requestModel = GPTRequestModel().apply {
             this.model = "text-davinci-edit-001"
