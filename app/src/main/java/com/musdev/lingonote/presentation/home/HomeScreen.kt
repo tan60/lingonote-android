@@ -132,7 +132,7 @@ fun BottomBar(navController: NavController) {
         verticalAlignment = Alignment.CenterVertically
     ) {
         screens.forEach { screen ->
-            AddItem(
+            AddBottomBarItem(
                 screen = screen,
                 currentDestination = currentDestination,
                 navController = navController
@@ -148,7 +148,7 @@ fun BottomBar(navController: NavController) {
 }
 
 @Composable
-fun RowScope.AddItem(
+fun RowScope.AddBottomBarItem(
     screen: BottomBarScreen,
     currentDestination: NavDestination?,
     navController: NavController
@@ -191,28 +191,5 @@ fun RowScope.AddItem(
             }
         }
     }
-
-    /*BottomNavigationItem(
-        modifier = Modifier.height(50.dp),
-        label = {
-            Column() {
-                Spacer(modifier = Modifier.height(5.dp))
-                Text(text = screen.title)
-            }
-
-        },
-        icon = {
-            Icon(
-                imageVector = screen.icon,
-                contentDescription = "Navigation Icon"
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        onClick = {
-            navController.navigate(screen.route)
-        }
-    )*/
 }
 

@@ -45,19 +45,25 @@ fun NotesScreen(
     modifier: Modifier,
     viewModel: NotesViewModel
 ) {
-        viewModel.fetchNotesAtFirst()
+    viewModel.fetchNotesAtFirst()
 
-    if (viewModel.uiState.isFetchingNotes) {
-        //display loading indicator
-        Box(modifier.fillMaxSize()) {
-            CircularProgressIndicator(Modifier.align(Alignment.Center))
+    Box(
+        modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)
+    ) {
+        if (viewModel.uiState.isFetchingNotes) {
+            //display loading indicator
+            Box(modifier.fillMaxSize()) {
+                CircularProgressIndicator(Modifier.align(Alignment.Center))
+            }
+        } else if (viewModel.uiState.noteItems.size > 0) {
+            //display Note List
+            NoteListSection(noteEntities = viewModel.uiState.noteItems)
+        } else {
+            //display Greeting
+            GreetingSection()
         }
-    } else if (viewModel.uiState.noteItems.size > 0) {
-        //display Note List
-        NoteListSection(noteEntities = viewModel.uiState.noteItems)
-    } else {
-        //display Greeting
-        GreetingSection()
     }
 }
 
@@ -66,8 +72,8 @@ fun NoteListSection(noteEntities: List<NoteEntity>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
-            //contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 20.dp),
-            modifier = Modifier.fillMaxHeight().padding(bottom = 60.dp),
+            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 88.dp),
+            //modifier = Modifier.fillMaxHeight().padding(bottom = 60.dp),
         ) {
             items(noteEntities.size) {
                 NoteItem(noteEntity = noteEntities[it])
@@ -85,7 +91,7 @@ fun NoteItem(noteEntity: NoteEntity) {
     )
     Card(
         modifier = Modifier
-            .padding(start = 20.dp, end = 20.dp, bottom = 20.dp),
+            .padding(bottom = 16.dp),
         //.clip(RoundedCornerShape(16.dp))
         shape = CardDefaults.shape,
         colors = CardDefaults.cardColors(
