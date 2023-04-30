@@ -1,5 +1,6 @@
 package com.musdev.lingonote.core.data.repository
 
+import com.musdev.lingonote.core.data.model.AchieveDTO
 import com.musdev.lingonote.core.data.services.DbService
 import com.musdev.lingonote.core.data.services.database.dto.Achieve
 import com.musdev.lingonote.core.data.services.database.dto.Note
@@ -9,7 +10,7 @@ class LocalRepositoryImpl @Inject constructor(
     private val dbService: DbService
 ) : LocalRepository {
 
-    private val dbNoteDao by lazy { dbService.noteDBDao}
+    private val dbNoteDao by lazy { dbService.noteDBDao }
 
     override suspend fun fetchNotes(): List<Note> {
         return dbNoteDao.getAllNotes()

@@ -74,7 +74,7 @@ class MainActivity : ComponentActivity() {
                 Log.d(TAG, correctEntity.correctedContent)
             }
             false -> {
-                Log.d(TAG, correctEntity.errorMessage)
+                Log.d(TAG, correctEntity.errorMessage?: "error")
             }
         }
     }

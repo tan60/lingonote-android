@@ -1,10 +1,11 @@
 package com.musdev.lingonote.core.domain.usecases
 
-import com.musdev.lingonote.core.data.model.GPTError
+import com.musdev.lingonote.core.data.datasource.DataResponse
 import com.musdev.lingonote.core.data.model.GPTRequestModel
-import com.musdev.lingonote.core.data.model.GPTResponseModel
 import com.musdev.lingonote.core.data.repository.RemoteRepository
 import com.musdev.lingonote.core.domain.entities.AICorrectEntity
+import com.musdev.lingonote.core.domain.translator.GPTResponseModelTranslator
+import com.musdev.lingonote.core.domain.translator.asDomain
 import javax.inject.Inject
 
 /**
@@ -16,33 +17,37 @@ class CorrectContentUseCase @Inject constructor (
 ) {
     suspend fun correctMyContent(content: String): AICorrectEntity {
 
+        /**
+         * openAI Edit
+         * POST : https://api.openai.com/v1/edits
+         * apiKey : Do not expose this at Github
+         */
+
+        val apiUrl = "https://api.openai.com/v1/edits"
+        val apiKey = "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"//working key
+        //val apiKey = "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"//invalid key for test
+
         var requestModel = GPTRequestModel().apply {
             this.model = "text-davinci-edit-001"
-            this.input = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
             this.instruction = "correct and improve only grammar."
+            this.input = content
         }
 
-        val result = repository.queryNoteContent(requestModel)
-
-        when (result.status) {
-            200 -> {
-                val resultData = result.data as GPTResponseModel
-
-                //convert response model to Entity
-                return AICorrectEntity().apply {
-                    this.isSuccess = true
-                    this.correctedContent = resultData.choices[0].text
-                    this.totalTokens = resultData.usage.total_tokens
+        repository.queryGPTEdit(apiUrl, apiKey, requestModel).asDomain(GPTResponseModelTranslator).let {
+            when (it) {
+                is DataResponse.Success<AICorrectEntity> -> {
+                    return it.data
                 }
-            }
-            else -> {
-                //convert response model to Entity
-                return AICorrectEntity().apply {
-                    this.isSuccess = false
-                    this.errorMessage = if (result.data is GPTError) {
-                        (result.data as GPTError).error.message
-                    } else {
-                        result.data as String
+                is DataResponse.Error->  {
+                    return AICorrectEntity().apply {
+                        this.isSuccess = false
+                        this.errorMessage = it.errorMessage
+                    }
+                }
+                is DataResponse.Fail -> {
+                    return AICorrectEntity().apply {
+                        this.isSuccess = false
+                        this.errorMessage = it.failString!!
                     }
                 }
             }

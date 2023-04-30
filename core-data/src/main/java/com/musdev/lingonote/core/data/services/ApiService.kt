@@ -1,7 +1,9 @@
 package com.musdev.lingonote.core.data.services
 
 import android.util.Log
+import com.musdev.lingonote.core.data.datasource.DataResponse
 import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.engine.cio.CIO
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpRequestRetry
@@ -10,6 +12,12 @@ import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
+import io.ktor.client.request.headers
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -40,5 +48,32 @@ object ApiService {
         install(HttpRequestRetry) {
             retryOnServerErrors(maxRetries = 1)
         }
+    }
+
+    suspend inline fun <reified T, reified R> DataResponse<R>.post(apiUrl: String, headers: Map<String, String>, body: T): DataResponse<R> {
+        runCatching {
+            httpClient.post(apiUrl) {
+                headers {
+                    //append("Content-type", "application/json; charset=UTF-8")
+                    headers.forEach {
+                        append(it.key, it.value)
+                    }
+                }
+                contentType(ContentType.Application.Json)
+                setBody(body)
+            }
+        }.fold(
+            onSuccess = { response ->
+                return if (response.status.isSuccess()) {
+                    return DataResponse.Success(response.body())
+                } else {
+                    return DataResponse.Error(response.status.value, response.status.description)
+                }
+            },
+            onFailure = { throwable ->
+                return DataResponse.Fail(throwable.message)
+            }
+
+        )
     }
 }

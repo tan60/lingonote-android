@@ -1,6 +1,7 @@
 package com.musdev.lingonote.presentation.home
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -50,6 +51,12 @@ class HomeActivity : ComponentActivity() {
                 viewModel.fetchNotes()
             }
         }*/
+
+        val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
+
+        lifecycleScope.launch {
+            correctContentTest(content)
+        }
         setContent {
             LingoNoteTheme {
                 Surface(
@@ -72,5 +79,17 @@ class HomeActivity : ComponentActivity() {
         }
 
         noteUseCase.postNote(noteEntity)
+    }
+
+    private suspend fun correctContentTest(content: String) {
+        var correctEntity = correctContentUseCase.correctMyContent(content)
+        when (correctEntity.isSuccess) {
+            true -> {
+                Log.d(TAG, correctEntity.correctedContent)
+            }
+            false -> {
+                Log.d(TAG, correctEntity.errorMessage?: "error")
+            }
+        }
     }
 }

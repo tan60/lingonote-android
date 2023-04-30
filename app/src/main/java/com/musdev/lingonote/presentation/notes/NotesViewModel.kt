@@ -27,7 +27,6 @@ class NotesViewModel @Inject constructor(
     private var fetchJob: Job? = null
 
     fun fetchNotesAtFirst() {
-        Log.d(TAG, "fetchNotesAtFirst()")
         when (uiState.noteItems.isEmpty()) {
             true -> {
                 fetchNotes()
@@ -38,7 +37,6 @@ class NotesViewModel @Inject constructor(
         }
     }
     private fun fetchNotes() {
-        Log.d(TAG, "fetchNotes()")
         when (fetchJob == null) {
             true -> {
                 uiState = uiState.copy(isFetchingNotes = true)
@@ -47,8 +45,6 @@ class NotesViewModel @Inject constructor(
                         val items = noteUseCase.fetchNotes() //fetch data
                         uiState = uiState.copy(noteItems = items) //update data state
                         uiState = uiState.copy(isFetchingNotes = false) //update loading state
-
-                        Log.d(TAG, "fetchNotes()::get response")
                     } catch (ioe: IOException) {
                         uiState = uiState.copy(isFetchingNotes = false) //update loading state
                     }

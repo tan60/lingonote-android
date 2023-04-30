@@ -45,22 +45,18 @@ fun NotesScreen(
     modifier: Modifier,
     viewModel: NotesViewModel
 ) {
-    Log.d(TAG, "NoteScreen()")
-    viewModel.fetchNotesAtFirst()
+        viewModel.fetchNotesAtFirst()
 
     if (viewModel.uiState.isFetchingNotes) {
-        Log.d(TAG, "NoteScreen():show circularProgressIndicator")
         //display loading indicator
         Box(modifier.fillMaxSize()) {
             CircularProgressIndicator(Modifier.align(Alignment.Center))
         }
     } else if (viewModel.uiState.noteItems.size > 0) {
-        Log.d(TAG, "NoteScreen():show NoteListSection")
         //display Note List
         NoteListSection(noteEntities = viewModel.uiState.noteItems)
     } else {
         //display Greeting
-        Log.d(TAG, "NoteScreen():show GreetingSection")
         GreetingSection()
     }
 }

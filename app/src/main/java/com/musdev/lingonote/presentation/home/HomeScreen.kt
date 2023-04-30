@@ -48,7 +48,6 @@ fun HomeScreen(
     modifier: Modifier,
     viewModel: NotesViewModel
 ) {
-    Log.d(TAG, "HomeScreen()")
     val navController = rememberNavController()
 
     Scaffold(
@@ -120,7 +119,6 @@ fun BottomBar(navController: NavController) {
         BottomBarScreen.Home,
         BottomBarScreen.Achieve
     )
-    Log.d(TAG, "BottomBar()")
 
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
@@ -155,7 +153,6 @@ fun RowScope.AddItem(
     currentDestination: NavDestination?,
     navController: NavController
 ) {
-    Log.d(TAG, "AddItem()")
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     val background =
         if (selected) MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f) else Color.Transparent

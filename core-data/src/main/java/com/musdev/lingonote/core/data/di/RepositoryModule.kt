@@ -1,7 +1,6 @@
 package com.musdev.lingonote.core.data.di
 
 import android.content.Context
-import android.content.SharedPreferences
 import com.musdev.lingonote.core.data.repository.LocalRepository
 import com.musdev.lingonote.core.data.repository.LocalRepositoryImpl
 import com.musdev.lingonote.core.data.repository.RemoteRepository
