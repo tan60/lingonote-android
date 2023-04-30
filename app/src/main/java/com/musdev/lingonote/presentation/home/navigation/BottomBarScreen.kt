@@ -9,14 +9,20 @@ sealed class BottomBarScreen(
     @DrawableRes val iconId: Int
 ) {
     //singleton
-    object Home : BottomBarScreen(
-        route = "home",
-        title = "Home",
+    object Notes : BottomBarScreen(
+        route = "notes",
+        title = "Notes",
         iconId = R.drawable.ic_baseline_dynamic_feed_24
     )
     object Achieve : BottomBarScreen(
         route = "achieve",
         title = "Achievement",
         iconId = R.drawable.ic_baseline_auto_graph_24
+    )
+
+    object Edit: BottomBarScreen(
+        route = "edit",
+        title = "Edit",
+        iconId = R.drawable.ic_baseline_add_24
     )
 }

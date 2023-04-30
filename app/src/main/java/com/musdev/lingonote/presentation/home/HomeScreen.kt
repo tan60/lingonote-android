@@ -9,12 +9,14 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FabPosition
@@ -25,6 +27,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,12 +38,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.musdev.lingonote.R
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
 import com.musdev.lingonote.presentation.notes.NotesViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,36 +56,87 @@ fun HomeScreen(
     val navController = rememberNavController()
 
     Scaffold(
+        topBar = {
+                 Row(
+                     horizontalArrangement = Arrangement.SpaceBetween,
+                     modifier = Modifier
+                         .fillMaxWidth()
+                         .height(32.dp)
+                 ) {
+                     Text(text = "Let's write in English")
+                     Icon(
+                         painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                         contentDescription = "new note",
+                         tint = MaterialTheme.colorScheme.onSecondary
+                     )
+                 }
+        },
         floatingActionButton = {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                onClick = {
+            when (CurrentRoute(navController = navController)) {
+                BottomBarScreen.Notes.route -> {
+                    FloatingActionButton(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        onClick = {
+                            navController.navigate(BottomBarScreen.Edit.route) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(16.dp),
 
+                            ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                                contentDescription = "new note",
+                                tint = MaterialTheme.colorScheme.onSecondary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("New Note")
+                        }
+                    }
                 }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_add_24),
-                        contentDescription = "icon",
-                        tint = MaterialTheme.colorScheme.onSecondary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("New Note")
+                BottomBarScreen.Edit.route -> {
+                    FloatingActionButton(
+                        containerColor = MaterialTheme.colorScheme.secondary,
+                        onClick = {
+                            navController.navigate(BottomBarScreen.Notes.route) {
+                                popUpTo(navController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        }
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            modifier = Modifier.padding(16.dp)
+                        ) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_baseline_check_24),
+                                contentDescription = "save",
+                                tint = MaterialTheme.colorScheme.onSecondary
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text("Save")
+                        }
+                    }
                 }
-
             }
+
         },
         floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
-            BottomAppBar(
-                modifier = Modifier
-                    .height(65.dp),
+            when (CurrentRoute(navController = navController)) {
+                BottomBarScreen.Notes.route, BottomBarScreen.Achieve.route -> {
+                    BottomAppBar(
+                        modifier = Modifier
+                            .height(65.dp),
 
-            ) {
-                BottomBar(navController = navController)
+                        ) {
+                        BottomBar(navController = navController)
+                    }
+                }
             }
         }
 
@@ -90,33 +146,15 @@ fun HomeScreen(
 }
 
 @Composable
-fun Fab() {
-    FloatingActionButton(
-        containerColor = MaterialTheme.colorScheme.secondary,
-        onClick = {
-
-        }
-    ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.padding(16.dp)
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_baseline_add_24),
-                contentDescription = "icon",
-                tint = MaterialTheme.colorScheme.onSecondary
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("New Note")
-        }
-
-    }
+fun CurrentRoute(navController: NavHostController): String? {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route
 }
 
 @Composable
 fun BottomBar(navController: NavController) {
     val screens = listOf(
-        BottomBarScreen.Home,
+        BottomBarScreen.Notes,
         BottomBarScreen.Achieve
     )
 
@@ -139,12 +177,6 @@ fun BottomBar(navController: NavController) {
             )
         }
     }
-
-    /*BottomNavigation {
-        screens.forEach {screen ->
-            AddItem(screen = screen, currentDestination = currentDestination, navController = navController)
-        }
-    }*/
 }
 
 @Composable

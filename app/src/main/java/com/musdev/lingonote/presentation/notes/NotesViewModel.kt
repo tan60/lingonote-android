@@ -15,8 +15,7 @@ import com.musdev.lingonote.presentation.home.TAG
 
 /**
  * viewModel은 Domain Layer 이용해 비즈니스 로직을 수행
- * UI를 그리기 위한 데이터 혹은 상태 변경 값에 따라 UiState를 변경해 준다.
- * UI를 직접 접근해서 조작하면 안됨
+ * UI를 그리기 위한 데이터 혹은 상태 변경에 맞게 UiState만 변경, UI를 직접 접근해서 조작하면 안됨
  */
 class NotesViewModel @Inject constructor(
     private val noteUseCase: NoteUseCase

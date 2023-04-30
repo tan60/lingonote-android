@@ -72,7 +72,7 @@ fun NoteListSection(noteEntities: List<NoteEntity>) {
     Column(modifier = Modifier.fillMaxWidth()) {
         LazyVerticalGrid(
             columns = GridCells.Fixed(1),
-            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 88.dp),
+            contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 96.dp),
             //modifier = Modifier.fillMaxHeight().padding(bottom = 60.dp),
         ) {
             items(noteEntities.size) {
@@ -91,7 +91,7 @@ fun NoteItem(noteEntity: NoteEntity) {
     )
     Card(
         modifier = Modifier
-            .padding(bottom = 16.dp),
+            .padding(top = 16.dp),
         //.clip(RoundedCornerShape(16.dp))
         shape = CardDefaults.shape,
         colors = CardDefaults.cardColors(
