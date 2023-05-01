@@ -25,4 +25,9 @@ sealed class BottomBarScreen(
         title = "Edit",
         iconId = R.drawable.ic_baseline_add_24
     )
+    object Greeting: BottomBarScreen(
+        route = "greeting",
+        title = "Greeting",
+        iconId = R.drawable.ic_baseline_add_24
+    )
 }

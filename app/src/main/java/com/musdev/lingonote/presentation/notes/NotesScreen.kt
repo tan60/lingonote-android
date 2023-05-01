@@ -2,6 +2,7 @@ package com.musdev.lingonote.presentation.notes
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,8 @@ import androidx.compose.ui.unit.sp
 import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.presentation.home.TAG
+import com.musdev.lingonote.ui.theme.DarkDisableColor
+import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
 
 
@@ -57,13 +60,16 @@ fun NotesScreen(
             Box(modifier.fillMaxSize()) {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
-        } else if (viewModel.uiState.noteItems.size > 0) {
+        } else {
+            NoteListSection(noteEntities = viewModel.uiState.noteItems)
+        }
+    /*else if (viewModel.uiState.noteItems.size > 0) {
             //display Note List
             NoteListSection(noteEntities = viewModel.uiState.noteItems)
         } else {
             //display Greeting
             GreetingSection()
-        }
+        }*/
     }
 }
 
@@ -163,77 +169,5 @@ fun NoteItem(noteEntity: NoteEntity) {
                 )
             }
         }
-    }
-}
-
-@Composable
-fun GreetingSection() {
-    Column(
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier
-            .padding(24.dp)
-            .fillMaxWidth()
-            .fillMaxHeight()
-    ) {
-        Text(
-            text = "꾸준한 작문으로\n당신의 영어를\n향상 시켜보세요.",
-            lineHeight = 40.sp,
-            fontSize = 38.sp,
-            fontFamily = pretendard,
-            fontWeight = FontWeight(1)
-        )
-        Text(
-            text = "하루 영작",
-            style = TextStyle(
-                fontSize = 50.sp,
-                fontWeight = FontWeight(8),
-                fontFamily = pretendard
-            )
-        )
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(16.dp))
-        Box(
-            modifier = Modifier
-                .clip(RoundedCornerShape(16.dp))
-                .background(Color(0xFFFAFAFA))
-                .fillMaxWidth()
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painter = painterResource(
-                        id = R.drawable.ic_baseline_edit_24
-                    ),
-                    contentDescription = "시작하기",
-                    tint = MaterialTheme.colorScheme.onSecondary,
-                    modifier = Modifier.padding(start = 15.dp),
-                )
-                Text(
-                    modifier = Modifier.padding(20.dp),
-                    text = "지금 시작해 볼까요?",
-                    style = TextStyle(fontSize = 18.sp),
-                    color = MaterialTheme.colorScheme.onSecondary,
-                    fontFamily = pretendard
-                )
-            }
-        }
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp))
-        Text(
-            modifier = Modifier.align(Alignment.End),
-            text = "AI 교정으로 더 나은 표현을 익혀보세요.",
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight(3),
-                color = MaterialTheme.colorScheme.error,
-                fontFamily = pretendard
-            )
-        )
-        Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(150.dp))
     }
 }

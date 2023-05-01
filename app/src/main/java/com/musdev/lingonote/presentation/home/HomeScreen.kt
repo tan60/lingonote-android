@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -56,6 +57,8 @@ import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
 import com.musdev.lingonote.presentation.notes.NotesViewModel
+import com.musdev.lingonote.ui.theme.DarkDisableColor
+import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -84,7 +87,7 @@ fun HomeScreen(
         floatingActionButton = {
             Row() {
                 when (getCurrentRoute(navController = navController)) {
-                    BottomBarScreen.Notes.route -> {
+                    BottomBarScreen.Notes.route, BottomBarScreen.Greeting.route -> {
                         buildNotesScreenActionButton(navController = navController)
                     }
                     BottomBarScreen.Edit.route -> {
@@ -273,10 +276,10 @@ fun buildBottomBar(navController: NavHostController) {
     when (getCurrentRoute(navController = navController)) {
         BottomBarScreen.Notes.route, BottomBarScreen.Achieve.route -> {
             BottomAppBar(
-                modifier = Modifier
-                    .height(65.dp),
-
-                ) {
+                modifier = Modifier.height(65.dp),
+                containerColor = MaterialTheme.colorScheme.background,
+                tonalElevation = 3.dp
+            ) {
                 BottomBar(navController = navController)
             }
         }
@@ -317,9 +320,13 @@ fun RowScope.AddBottomBarItem(
     currentDestination: NavDestination?,
     navController: NavController
 ) {
+    val darkTheme: Boolean = isSystemInDarkTheme()
+
     val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
     val background =
-        if (selected) MaterialTheme.colorScheme.secondary.copy(alpha = 0.6f) else Color.Transparent
+        if (selected) {
+            if (darkTheme) DarkDisableColor else LightDisableColor
+        } else Color.Transparent
     val contentColor =
         if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondary
 

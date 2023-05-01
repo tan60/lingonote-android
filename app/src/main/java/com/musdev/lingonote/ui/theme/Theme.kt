@@ -24,8 +24,6 @@ private val DarkColorScheme = darkColorScheme(
     onBackground = DarkOnBackgroundColor,
     error = DarkErrorColor,
     onError = DarkOnErrorColor,
-    tertiary = DarkTertiaryColor,
-    onTertiary = DarkOnTertiaryColor
 )
 
 private val LightColorScheme = lightColorScheme(
@@ -37,8 +35,6 @@ private val LightColorScheme = lightColorScheme(
     onBackground = LightOnBackgroundColor,
     error = LightErrorColor,
     onError = LightOnErrorColor,
-    tertiary = LightTertiaryColor,
-    onTertiary = LightOnTertiaryColor
 )
 
 
