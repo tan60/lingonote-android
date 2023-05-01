@@ -63,8 +63,8 @@ class NotesViewModel @Inject constructor(
                     }
                 }
             }
-
             false -> {
+                uiState = uiState.copy(isFetchingNotes = false)
                 Log.d(TAG, "fetchNotes()::job is working")
             }
         }
@@ -85,8 +85,8 @@ class NotesViewModel @Inject constructor(
                     }
                 }
             }
-
             false -> {
+                uiState = uiState.copy(isFetchingNotes = false)
                 Log.d(TAG, "fetchNotes()::job is working")
             }
         }
@@ -94,6 +94,7 @@ class NotesViewModel @Inject constructor(
 
     fun shouldUpdate(shouldUpdate: Boolean) {
         this.shouldUpdate = shouldUpdate
+        fetchNotesAtFirst()
     }
 }
 

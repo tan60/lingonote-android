@@ -45,7 +45,7 @@ fun NotesScreen(
     modifier: Modifier,
     viewModel: NotesViewModel
 ) {
-    viewModel.fetchNotesAtFirst()
+    //viewModel.fetchNotesAtFirst()
 
     Box(
         modifier = modifier

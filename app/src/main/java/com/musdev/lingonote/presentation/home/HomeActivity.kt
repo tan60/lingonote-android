@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
 import com.musdev.lingonote.presentation.edit.EditViewModel
@@ -45,11 +47,11 @@ class HomeActivity : ComponentActivity() {
             }
         }*/
 
-        /*lifecycleScope.launch {
+        lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.fetchNotes()
+                noteViewModel.fetchNotesAtFirst()
             }
-        }*/
+        }
 
         val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
 
