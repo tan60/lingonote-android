@@ -64,7 +64,7 @@ class HomeActivity : ComponentActivity() {
                 ) {
                     HomeScreen(
                         modifier = Modifier.fillMaxSize(),
-                        noteViewModel = noteViewModel,
+                        notesViewModel = noteViewModel,
                         editViewModel = editViewModel
                     )
                 }

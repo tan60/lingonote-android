@@ -30,6 +30,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -60,11 +62,12 @@ import kotlinx.coroutines.launch
 
 lateinit var snackHostState: SnackbarHostState
 lateinit var coroutineScope: CoroutineScope
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-    noteViewModel: NotesViewModel,
+    notesViewModel: NotesViewModel,
     editViewModel: EditViewModel
 ) {
     val navController = rememberNavController()
@@ -87,7 +90,8 @@ fun HomeScreen(
                     BottomBarScreen.Edit.route -> {
                         buildEditScreenFloatActionButton(
                             navController = navController,
-                            editViewModel = editViewModel
+                            editViewModel = editViewModel,
+                            notesViewModel = notesViewModel
                         )
                     }
                 }
@@ -102,7 +106,7 @@ fun HomeScreen(
         BottomNavGraph(
             navController = navController,
             modifier = modifier,
-            noteViewModel = noteViewModel,
+            noteViewModel = notesViewModel,
             editViewModel = editViewModel
         )
     }
@@ -197,6 +201,7 @@ fun buildNotesScreenActionButton(navController: NavHostController) {
 @Composable
 fun buildEditScreenFloatActionButton(
     navController: NavHostController,
+    notesViewModel: NotesViewModel,
     editViewModel: EditViewModel
 ) {
     FloatingActionButton(
@@ -231,8 +236,13 @@ fun buildEditScreenFloatActionButton(
 
         onClick = {
             if (editViewModel.uiState.isSaveEnable) {
-                editViewModel.postNewNote()
-                showSnackBar(snackHostState = snackHostState, coroutineScope, "New note is created!")
+
+                coroutineScope.launch {
+                    editViewModel.postNewNote { result ->
+                        notesViewModel.shouldUpdate(result)
+                        showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "New note is created!")
+                    }
+                }
 
                 navController.navigate(BottomBarScreen.Notes.route) {
                     popUpTo(navController.graph.findStartDestination().id)
@@ -353,7 +363,7 @@ fun showSnackBar(snackHostState: SnackbarHostState,
                          message: String) {
 
     coroutineScope.launch {
-        snackHostState.showSnackbar(message)
+        snackHostState.showSnackbar(message = message)
     }
 }
 

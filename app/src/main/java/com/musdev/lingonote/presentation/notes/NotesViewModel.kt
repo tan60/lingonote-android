@@ -24,8 +24,9 @@ class NotesViewModel @Inject constructor(
     var uiState by mutableStateOf(NotesUiState())
         private set
 
-
     private var fetchJob: Job? = null
+
+    private var shouldUpdate: Boolean = false
 
     fun fetchNotesAtFirst() {
         when (uiState.noteItems.isEmpty()) {
@@ -34,6 +35,37 @@ class NotesViewModel @Inject constructor(
             }
             else -> {
                 //items are exist
+                if (shouldUpdate) {
+                    //update last items
+                    fetchLastNote()
+                    shouldUpdate = false
+
+                }
+            }
+        }
+    }
+
+    private fun fetchLastNote() {
+        when (fetchJob == null) {
+            true -> {
+                uiState = uiState.copy(isFetchingNotes = true)
+                fetchJob = viewModelScope.launch(Dispatchers.IO) {
+                    try {
+                        val item = noteUseCase.fetchLastNote() //fetch data
+                        uiState.noteItems.add(0, item)
+
+                        uiState = uiState.copy(noteItems = uiState.noteItems) //update data state
+                        uiState = uiState.copy(isFetchingNotes = false) //update loading state
+                        fetchJob = null
+                    } catch (ioe: IOException) {
+                        uiState = uiState.copy(isFetchingNotes = false) //update loading state
+                        fetchJob = null
+                    }
+                }
+            }
+
+            false -> {
+                Log.d(TAG, "fetchNotes()::job is working")
             }
         }
     }
@@ -58,6 +90,10 @@ class NotesViewModel @Inject constructor(
                 Log.d(TAG, "fetchNotes()::job is working")
             }
         }
+    }
+
+    fun shouldUpdate(shouldUpdate: Boolean) {
+        this.shouldUpdate = shouldUpdate
     }
 }
 

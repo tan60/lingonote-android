@@ -29,4 +29,17 @@ class NoteUseCase @Inject constructor(
 
         return noteEntities
     }
+
+    suspend fun fetchLastNote() : NoteEntity {
+        val note = localRepository.fetchLastNote()
+
+        return NoteEntity().apply {
+            this.postNo = note.id
+            this.topic = note.topic
+            this.content = note.content
+            this.issueDate = note.issueDate
+            this.correctedContent = note.correctedContent
+            this.correctedType = note.correctedType
+        }
+    }
 }

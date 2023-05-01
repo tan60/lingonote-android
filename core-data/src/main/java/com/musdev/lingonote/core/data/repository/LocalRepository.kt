@@ -14,5 +14,7 @@ interface LocalRepository {
 
     suspend fun fetchFirstNote(): Note
 
+    suspend fun fetchLastNote(): Note
+
     suspend fun fetchAchieve(): List<Achieve> = listOf()
 }

@@ -34,6 +34,10 @@ class LocalRepositoryImpl @Inject constructor(
         return dbNoteDao.getFirstNote()
     }
 
+    override suspend fun fetchLastNote(): Note {
+        return dbNoteDao.getLastNote()
+    }
+
     override suspend fun fetchAchieve(): List<Achieve> {
         return dbNoteDao.getAchieves()
     }

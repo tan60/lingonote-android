@@ -40,9 +40,12 @@ interface NoteDBDao {
     suspend fun getTotalNotesCount() : Int
 
     //최초 노트 질의
-    //@Query("SELECT * FROM note_table ORDER BY id DESC LIMIT 1")
     @Query("SELECT * FROM note_table ORDER BY id ASC LIMIT 1")
     suspend fun getFirstNote() : Note
+
+    //마지막 작성 노트 질의
+    @Query("SELECT * FROM note_table ORDER BY id DESC LIMIT 1")
+    suspend fun getLastNote() : Note
 
     //날짜 별로 작성한 노트의 갯수 질의
     @Query("SELECT date(issue_date) AS date, COUNT(*) AS count FROM note_table GROUP BY date(issue_date)")

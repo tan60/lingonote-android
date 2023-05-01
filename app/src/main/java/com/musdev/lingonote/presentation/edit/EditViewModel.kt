@@ -23,7 +23,7 @@ class EditViewModel @Inject constructor(
 
     var postJob: Job? = null
 
-    fun postNewNote() {
+    fun postNewNote(callback: (result: Boolean) -> Unit) {
         when(postJob == null) {
             true -> {
                 uiState = uiState.copy(isPosting = true)
@@ -31,13 +31,20 @@ class EditViewModel @Inject constructor(
                     try {
                         val result = editUseCase.postNote(buildNote(uiState.topic, uiState.content))
                         uiState.copy(isPosting = false)
+                        uiState.copy(isPostComplete = true)
+                        postJob = null
+                        callback(result)
                     } catch (e: Exception) {
                         uiState.copy(isPosting = false)
+                        uiState.copy(isPostComplete = true)
+                        postJob = null
+                        callback(false)
                     }
                 }
             }
             false -> {
                 Log.d(TAG, "postNewNote()::job is working")
+                callback(false)
             }
         }
     }
