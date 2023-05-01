@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.musdev.lingonote.presentation.achieve.AchieveScreen
 import com.musdev.lingonote.presentation.edit.EditScreen
+import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.notes.NotesScreen
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 
@@ -15,21 +16,22 @@ import com.musdev.lingonote.presentation.notes.NotesViewModel
 fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier,
-    viewModel: NotesViewModel
+    noteViewModel: NotesViewModel,
+    editViewModel: EditViewModel
 ) {
 
     NavHost(
         navController = navController,
-        startDestination = BottomBarScreen.Edit.route//BottomBarScreen.Notes.route
+        startDestination = BottomBarScreen.Notes.route
     ) {
         composable(route = BottomBarScreen.Notes.route) {
-            NotesScreen(modifier = modifier, viewModel = viewModel)
+            NotesScreen(modifier = modifier, viewModel = noteViewModel)
         }
         composable(route = BottomBarScreen.Achieve.route) {
             AchieveScreen()
         }
         composable(route = "edit") {
-            EditScreen()
+            EditScreen(modifier = modifier, editViewModel = editViewModel)
         }
     }
 }

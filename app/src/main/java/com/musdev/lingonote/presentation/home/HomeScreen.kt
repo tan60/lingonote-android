@@ -26,9 +26,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,26 +50,48 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.musdev.lingonote.R
+import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.ui.theme.pretendard
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 
-
+lateinit var snackHostState: SnackbarHostState
+lateinit var coroutineScope: CoroutineScope
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-    viewModel: NotesViewModel
+    noteViewModel: NotesViewModel,
+    editViewModel: EditViewModel
 ) {
     val navController = rememberNavController()
+    snackHostState = remember { SnackbarHostState() }
+    coroutineScope = rememberCoroutineScope()
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackHostState)
+        },
         topBar = {
             buildTopBar(navController = navController)
         },
         floatingActionButton = {
-            buildFloatActionButton(navController = navController)
+            Row() {
+                when (getCurrentRoute(navController = navController)) {
+                    BottomBarScreen.Notes.route -> {
+                        buildNotesScreenActionButton(navController = navController)
+                    }
+                    BottomBarScreen.Edit.route -> {
+                        buildEditScreenFloatActionButton(
+                            navController = navController,
+                            editViewModel = editViewModel
+                        )
+                    }
+                }
+            }
         },
         floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
@@ -73,7 +99,12 @@ fun HomeScreen(
         }
 
     ) { contentPadding ->
-        BottomNavGraph(navController = navController, modifier = modifier, viewModel = viewModel)
+        BottomNavGraph(
+            navController = navController,
+            modifier = modifier,
+            noteViewModel = noteViewModel,
+            editViewModel = editViewModel
+        )
     }
 }
 
@@ -135,54 +166,94 @@ fun buildTopBar(navController: NavHostController) {
         }
     }
 }
-@Composable
-fun buildFloatActionButton(navController: NavHostController) {
-    when (getCurrentRoute(navController = navController)) {
-        BottomBarScreen.Notes.route -> {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                onClick = {
-                    navController.navigate(BottomBarScreen.Edit.route) {
-                        popUpTo(navController.graph.findStartDestination().id)
-                        launchSingleTop = true
-                    }
-                }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(16.dp),
 
-                    ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_add_24),
-                        contentDescription = "new note",
-                        tint = MaterialTheme.colorScheme.onSecondary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("New Note")
+@Composable
+fun buildNotesScreenActionButton(navController: NavHostController) {
+    FloatingActionButton(
+        containerColor = MaterialTheme.colorScheme.secondary,
+        onClick = {
+            navController.navigate(BottomBarScreen.Edit.route) {
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp),
+
+            ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_add_24),
+                contentDescription = "new note",
+                tint = MaterialTheme.colorScheme.onSecondary
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("New Note")
+        }
+    }
+}
+
+@Composable
+fun buildEditScreenFloatActionButton(
+    navController: NavHostController,
+    editViewModel: EditViewModel
+) {
+    FloatingActionButton(
+        containerColor = if (editViewModel.uiState.isPreviewEnable)
+            MaterialTheme.colorScheme.secondary
+        else MaterialTheme.colorScheme.tertiary,
+
+        onClick = {
+            if (editViewModel.uiState.isPreviewEnable) {
+                //go to preview screen
+            }
+        }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_remove_red_eye_24),
+                contentDescription = "preview",
+                tint = if (editViewModel.uiState.isPreviewEnable)
+                    MaterialTheme.colorScheme.onSecondary
+                else MaterialTheme.colorScheme.onTertiary,
+            )
+        }
+    }
+    Spacer(modifier = Modifier.width(8.dp))
+    FloatingActionButton(
+        containerColor = if (editViewModel.uiState.isPreviewEnable)
+            MaterialTheme.colorScheme.secondary
+        else MaterialTheme.colorScheme.tertiary,
+
+        onClick = {
+            if (editViewModel.uiState.isSaveEnable) {
+                editViewModel.postNewNote()
+                showSnackBar(snackHostState = snackHostState, coroutineScope, "New note is created!")
+
+                navController.navigate(BottomBarScreen.Notes.route) {
+                    popUpTo(navController.graph.findStartDestination().id)
+                    launchSingleTop = true
                 }
             }
         }
-        BottomBarScreen.Edit.route -> {
-            FloatingActionButton(
-                containerColor = MaterialTheme.colorScheme.secondary,
-                onClick = {
-
-                }
-            ) {
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_baseline_check_24),
-                        contentDescription = "save",
-                        tint = MaterialTheme.colorScheme.onSecondary
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Save")
-                }
-            }
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(16.dp)
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_baseline_check_24),
+                contentDescription = "save",
+                tint = if (editViewModel.uiState.isPreviewEnable)
+                    MaterialTheme.colorScheme.onSecondary
+                else MaterialTheme.colorScheme.onTertiary,
+            )
+            Spacer(modifier = Modifier.width(8.dp))
+            Text("Save")
         }
     }
 }
@@ -273,6 +344,16 @@ fun RowScope.AddBottomBarItem(
                 )
             }
         }
+    }
+}
+
+
+fun showSnackBar(snackHostState: SnackbarHostState,
+                         coroutineScope: CoroutineScope,
+                         message: String) {
+
+    coroutineScope.launch {
+        snackHostState.showSnackbar(message)
     }
 }
 

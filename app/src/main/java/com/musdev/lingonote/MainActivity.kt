@@ -14,6 +14,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.lifecycleScope
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
+import com.musdev.lingonote.core.domain.usecases.EditUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
 import com.musdev.lingonote.presentation.home.HomeScreen
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
@@ -34,6 +35,9 @@ class MainActivity : ComponentActivity() {
     @Inject
     lateinit var noteUseCase: NoteUseCase
 
+    @Inject
+    lateinit var editUseCase: EditUseCase
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,15 +46,15 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launch(Dispatchers.IO) {
             //correctContentTest(content)
 
-            val startIndex = getTotalCountTest()
+            val startIndex = 0//getTotalCountTest()
 
             for (i in startIndex.. startIndex + 3) {
                 postNoteTest("test topic $i", "test content $i")
             }
 
             fetchNotesTest()
-            updateNoteTest(1, "update topic 0", "update content 0")
-            getFirstNoteTest()
+            //updateNoteTest(1, "update topic 0", "update content 0")
+            //getFirstNoteTest()
 
         }
 
@@ -85,10 +89,10 @@ class MainActivity : ComponentActivity() {
             this.content = content
         }
 
-        noteUseCase.postNote(noteEntity)
+        editUseCase.postNote(noteEntity)
     }
 
-    private suspend fun updateNoteTest(postNo: Int, topic: String, content: String) {
+    /*private suspend fun updateNoteTest(postNo: Int, topic: String, content: String) {
         val noteEntity = NoteEntity().apply {
             this.postNo = postNo
             this.topic = topic
@@ -103,7 +107,7 @@ class MainActivity : ComponentActivity() {
     }
     private suspend fun getFirstNoteTest() {
         Log.d(TAG, "First Note: ${noteUseCase.getFirstNote()}")
-    }
+    }*/
 
     private suspend fun fetchNotesTest() {
         val noteEntities = noteUseCase.fetchNotes()

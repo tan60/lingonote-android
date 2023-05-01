@@ -1,6 +1,5 @@
 package com.musdev.lingonote.presentation.edit
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -12,7 +11,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -22,15 +20,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.musdev.lingonote.ui.theme.pretendard
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Preview
-fun EditScreen() {
+fun EditScreen(
+    modifier: Modifier,
+    editViewModel: EditViewModel
+) {
     var topicText by remember {
         mutableStateOf(TextFieldValue(""))
     }
@@ -46,6 +45,7 @@ fun EditScreen() {
                 value = topicText,
                 onValueChange = {
                     topicText = it
+                    editViewModel.setTopicText(topicText.text)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(
@@ -84,6 +84,7 @@ fun EditScreen() {
                 value = contentText,
                 onValueChange = {
                     contentText = it
+                    editViewModel.setContentText(contentText.text)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

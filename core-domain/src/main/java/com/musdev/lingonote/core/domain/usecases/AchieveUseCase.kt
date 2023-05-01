@@ -2,6 +2,7 @@ package com.musdev.lingonote.core.domain.usecases
 
 import com.musdev.lingonote.core.data.repository.LocalRepository
 import com.musdev.lingonote.core.domain.entities.AchieveEntity
+import com.musdev.lingonote.core.domain.entities.NoteEntity
 import javax.inject.Inject
 
 class AchieveUseCase @Inject constructor(
@@ -19,5 +20,22 @@ class AchieveUseCase @Inject constructor(
         }
 
         return achieveEntities
+    }
+
+    suspend fun getFirstNote() : NoteEntity {
+        val note = localRepository.fetchFirstNote()
+
+        return NoteEntity().apply {
+            this.postNo = note.id
+            this.topic = note.topic
+            this.content = note.content
+            this.issueDate = note.issueDate
+            this.correctedContent = note.correctedContent
+            this.correctedType = note.correctedType
+        }
+    }
+
+    suspend fun getTotalNoteCount(): Int {
+        return localRepository.fetchTotalPostedCount()
     }
 }

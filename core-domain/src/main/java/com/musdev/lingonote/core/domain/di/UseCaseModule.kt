@@ -3,6 +3,7 @@ package com.musdev.lingonote.core.domain.di
 import com.musdev.lingonote.core.data.repository.LocalRepository
 import com.musdev.lingonote.core.data.repository.RemoteRepository
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
+import com.musdev.lingonote.core.domain.usecases.EditUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
 import dagger.Module
 import dagger.Provides
@@ -23,5 +24,11 @@ object UseCaseModule {
     @Provides
     fun provideNoteUseCase(repository: LocalRepository): NoteUseCase {
         return NoteUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideEditUseCase(repository: LocalRepository): EditUseCase {
+        return EditUseCase(repository)
     }
 }

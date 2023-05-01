@@ -5,20 +5,16 @@ import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
+import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,10 +25,13 @@ class HomeActivity : ComponentActivity() {
     //test code
     @Inject
     lateinit var correctContentUseCase: CorrectContentUseCase
+
     @Inject
     lateinit var noteUseCase: NoteUseCase
 
-    @Inject lateinit var viewModel: NotesViewModel
+    @Inject lateinit var noteViewModel: NotesViewModel
+
+    @Inject lateinit var editViewModel: EditViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,13 +62,17 @@ class HomeActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    HomeScreen(modifier = Modifier.fillMaxSize(), viewModel)
+                    HomeScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        noteViewModel = noteViewModel,
+                        editViewModel = editViewModel
+                    )
                 }
             }
         }
     }
 
-    private suspend fun getTotalCountTest(): Int {
+    /*private suspend fun getTotalCountTest(): Int {
         return noteUseCase.getTotalNoteCount()
     }
     private suspend fun postNoteTest(topic: String, content: String) {
@@ -79,7 +82,7 @@ class HomeActivity : ComponentActivity() {
         }
 
         noteUseCase.postNote(noteEntity)
-    }
+    }*/
 
     private suspend fun correctContentTest(content: String) {
         var correctEntity = correctContentUseCase.correctMyContent(content)

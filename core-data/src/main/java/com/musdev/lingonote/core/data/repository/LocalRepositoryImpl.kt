@@ -16,12 +16,14 @@ class LocalRepositoryImpl @Inject constructor(
         return dbNoteDao.getAllNotes()
     }
 
-    override suspend fun postNote(note: Note) {
+    override suspend fun postNote(note: Note): Boolean {
         dbNoteDao.insertNote(note)
+        return true
     }
 
-    override suspend fun updateNote(note: Note) {
-        return dbNoteDao.upsertNote(note)
+    override suspend fun updateNote(note: Note): Boolean {
+        dbNoteDao.upsertNote(note)
+        return true
     }
 
     override suspend fun fetchTotalPostedCount(): Int {

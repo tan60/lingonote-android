@@ -2,7 +2,7 @@ package com.musdev.lingonote.presentation.notes
 
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 
-data class HomeUiState (
+data class NotesUiState (
     val noteItems: MutableList<NoteEntity> = mutableListOf(),
     val isFetchingNotes: Boolean = false
 )

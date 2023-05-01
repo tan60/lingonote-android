@@ -12,6 +12,7 @@ import java.io.IOException
 import javax.inject.Inject
 import androidx.compose.runtime.setValue
 import com.musdev.lingonote.presentation.home.TAG
+import kotlinx.coroutines.Dispatchers
 
 /**
  * viewModel은 Domain Layer 이용해 비즈니스 로직을 수행
@@ -20,8 +21,9 @@ import com.musdev.lingonote.presentation.home.TAG
 class NotesViewModel @Inject constructor(
     private val noteUseCase: NoteUseCase
 ) : ViewModel() {
-    var uiState by mutableStateOf(HomeUiState())
+    var uiState by mutableStateOf(NotesUiState())
         private set
+
 
     private var fetchJob: Job? = null
 
@@ -39,13 +41,15 @@ class NotesViewModel @Inject constructor(
         when (fetchJob == null) {
             true -> {
                 uiState = uiState.copy(isFetchingNotes = true)
-                fetchJob = viewModelScope.launch {
+                fetchJob = viewModelScope.launch(Dispatchers.IO) {
                     try {
                         val items = noteUseCase.fetchNotes() //fetch data
                         uiState = uiState.copy(noteItems = items) //update data state
                         uiState = uiState.copy(isFetchingNotes = false) //update loading state
+                        fetchJob = null
                     } catch (ioe: IOException) {
                         uiState = uiState.copy(isFetchingNotes = false) //update loading state
+                        fetchJob = null
                     }
                 }
             }
