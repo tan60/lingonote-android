@@ -29,21 +29,4 @@ class EditUseCase @Inject constructor(
 
         return localRepository.postNote(note)
     }
-
-    suspend fun updateNote(noteEntity: NoteEntity): Boolean {
-        val ldt = LocalDateTime()
-        val formatDateTime = DateTimeFormat.forPattern("yyyy-MM-dd, HH:mm:ss")
-        //val dateFormat = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale("ko"))
-
-        val note = Note().apply {
-            this.id = noteEntity.postNo
-            this.topic = noteEntity.topic
-            this.content = noteEntity.content
-            this.correctedContent = noteEntity.correctedContent
-            this.correctedType = noteEntity.correctedType
-            this.fixedDateTime = formatDateTime.print(ldt)
-        }
-
-        return localRepository.updateNote(note)
-    }
 }

@@ -26,6 +26,11 @@ class LocalRepositoryImpl @Inject constructor(
         return true
     }
 
+    override suspend fun deleteNote(note: Note): Boolean {
+        dbNoteDao.deleteNote(note)
+        return true
+    }
+
     override suspend fun fetchTotalPostedCount(): Int {
         return dbNoteDao.getTotalNotesCount()
     }
@@ -36,6 +41,10 @@ class LocalRepositoryImpl @Inject constructor(
 
     override suspend fun fetchLastNote(): Note {
         return dbNoteDao.getLastNote()
+    }
+
+    override suspend fun fetchNote(noteId: Int): Note? {
+        return dbNoteDao.getNote(noteId)
     }
 
     override suspend fun fetchAchieve(): List<Achieve> {

@@ -1,4 +1,4 @@
-package com.musdev.lingonote.presentation.home
+package com.musdev.lingonote.presentation
 
 import android.os.Bundle
 import android.util.Log
@@ -14,6 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
 import com.musdev.lingonote.presentation.edit.EditViewModel
+import com.musdev.lingonote.presentation.home.HomeScreen
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint

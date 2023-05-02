@@ -23,9 +23,12 @@ interface NoteDBDao {
     @Query("SELECT MAX(id) as max FROM note_table")
     suspend fun getLastNoteIndex(): Int
 
+    @Query("SELECT * FROM note_table WHERE id = :noteId")
+    suspend fun getNote(noteId: Int): Note?
+
     //포스트 생성
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertNote(noteEntity: Note)
+    suspend fun insertNote(note: Note)
 
 
     //포스트 수정
