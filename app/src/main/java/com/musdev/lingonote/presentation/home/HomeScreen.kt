@@ -57,6 +57,7 @@ import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
 import com.musdev.lingonote.presentation.notes.NotesViewModel
+import com.musdev.lingonote.presentation.preview.PreviewViewModel
 import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
@@ -71,7 +72,8 @@ lateinit var coroutineScope: CoroutineScope
 fun HomeScreen(
     modifier: Modifier,
     notesViewModel: NotesViewModel,
-    editViewModel: EditViewModel
+    editViewModel: EditViewModel,
+    previewViewModel: PreviewViewModel
 ) {
     val navController = rememberNavController()
     snackHostState = remember { SnackbarHostState() }
@@ -110,7 +112,8 @@ fun HomeScreen(
             navController = navController,
             modifier = modifier,
             noteViewModel = notesViewModel,
-            editViewModel = editViewModel
+            editViewModel = editViewModel,
+            previewViewModel = previewViewModel
         )
     }
 }

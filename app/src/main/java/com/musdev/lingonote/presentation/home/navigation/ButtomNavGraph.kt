@@ -2,6 +2,7 @@ package com.musdev.lingonote.presentation.home.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.navigation.NavGraph.Companion.findStartDestination
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -12,13 +13,16 @@ import com.musdev.lingonote.presentation.edit.EditScreen
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.notes.NotesScreen
 import com.musdev.lingonote.presentation.notes.NotesViewModel
+import com.musdev.lingonote.presentation.preview.PreviewScreen
+import com.musdev.lingonote.presentation.preview.PreviewViewModel
 
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier,
     noteViewModel: NotesViewModel,
-    editViewModel: EditViewModel
+    editViewModel: EditViewModel,
+    previewViewModel: PreviewViewModel
 ) {
     var destination = if (noteViewModel.uiState.noteItems.isEmpty()) {
         BottomBarScreen.Greeting.route
@@ -31,13 +35,24 @@ fun BottomNavGraph(
         startDestination = destination
     ) {
         composable(route = BottomBarScreen.Notes.route) {
-            NotesScreen(modifier = modifier, viewModel = noteViewModel)
+            NotesScreen(modifier = modifier, nav = navController, viewModel = noteViewModel,
+                onItemClick = { noteEntity ->
+                    previewViewModel.setCurrentNote(noteEntity = noteEntity, enableDelete = true)
+                    navController.navigate(BottomBarScreen.Preview.route) {
+                        popUpTo(navController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }
+            )
         }
         composable(route = BottomBarScreen.Achieve.route) {
             AchieveScreen()
         }
-        composable(route = "edit") {
+        composable(route = BottomBarScreen.Edit.route) {
             EditScreen(modifier = modifier, editViewModel = editViewModel)
+        }
+        composable(route = BottomBarScreen.Preview.route) {
+            PreviewScreen(modifier = modifier, previewViewModel = previewViewModel)
         }
         composable(route = "greeting") {
             GreetingScreen()

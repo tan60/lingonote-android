@@ -1,7 +1,6 @@
 package com.musdev.lingonote.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,11 +10,10 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
-import com.musdev.lingonote.core.domain.usecases.NoteUseCase
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.HomeScreen
 import com.musdev.lingonote.presentation.notes.NotesViewModel
+import com.musdev.lingonote.presentation.preview.PreviewViewModel
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -24,17 +22,14 @@ import javax.inject.Inject
 const val TAG = "AppDebug"
 @AndroidEntryPoint
 class HomeActivity : ComponentActivity() {
-
-    //test code
     @Inject
-    lateinit var correctContentUseCase: CorrectContentUseCase
+    lateinit var noteViewModel: NotesViewModel
 
     @Inject
-    lateinit var noteUseCase: NoteUseCase
+    lateinit var editViewModel: EditViewModel
 
-    @Inject lateinit var noteViewModel: NotesViewModel
-
-    @Inject lateinit var editViewModel: EditViewModel
+    @Inject
+    lateinit var previewViewModel: PreviewViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -54,11 +49,6 @@ class HomeActivity : ComponentActivity() {
             }
         }
 
-        val content = "Hi, this is DoHyoung Kim and I am Android developer. Am I doing now?"
-
-        lifecycleScope.launch {
-            correctContentTest(content)
-        }
         setContent {
             LingoNoteTheme {
                 Surface(
@@ -68,7 +58,8 @@ class HomeActivity : ComponentActivity() {
                     HomeScreen(
                         modifier = Modifier.fillMaxSize(),
                         notesViewModel = noteViewModel,
-                        editViewModel = editViewModel
+                        editViewModel = editViewModel,
+                        previewViewModel = previewViewModel
                     )
                 }
             }
@@ -87,7 +78,7 @@ class HomeActivity : ComponentActivity() {
         noteUseCase.postNote(noteEntity)
     }*/
 
-    private suspend fun correctContentTest(content: String) {
+    /*private suspend fun correctContentTest(content: String) {
         var correctEntity = correctContentUseCase.correctMyContent(content)
         when (correctEntity.isSuccess) {
             true -> {
@@ -97,5 +88,5 @@ class HomeActivity : ComponentActivity() {
                 Log.d(TAG, correctEntity.errorMessage?: "error")
             }
         }
-    }
+    }*/
 }

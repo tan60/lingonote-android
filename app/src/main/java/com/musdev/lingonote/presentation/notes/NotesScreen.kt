@@ -1,54 +1,49 @@
 package com.musdev.lingonote.presentation.notes
 
-import android.util.Log
-import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.musdev.lingonote.R
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.musdev.lingonote.core.domain.entities.NoteEntity
-import com.musdev.lingonote.presentation.home.TAG
-import com.musdev.lingonote.ui.theme.DarkDisableColor
-import com.musdev.lingonote.ui.theme.LightDisableColor
+import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.ui.theme.pretendard
 
-
-
+lateinit var navController: NavHostController
+lateinit var onNoteClick: (noteEntity: NoteEntity) -> Unit
 @Composable
 fun NotesScreen(
+    nav: NavHostController,
     modifier: Modifier,
-    viewModel: NotesViewModel
+    viewModel: NotesViewModel,
+    onItemClick: (noteEntity: NoteEntity) -> Unit
 ) {
-    //viewModel.fetchNotesAtFirst()
+    navController = nav
+    onNoteClick = onItemClick
 
     Box(
         modifier = modifier
@@ -63,13 +58,6 @@ fun NotesScreen(
         } else {
             NoteListSection(noteEntities = viewModel.uiState.noteItems)
         }
-    /*else if (viewModel.uiState.noteItems.size > 0) {
-            //display Note List
-            NoteListSection(noteEntities = viewModel.uiState.noteItems)
-        } else {
-            //display Greeting
-            GreetingSection()
-        }*/
     }
 }
 
@@ -88,6 +76,7 @@ fun NoteListSection(noteEntities: List<NoteEntity>) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteItem(noteEntity: NoteEntity) {
     val customCardColors = CardDefaults.cardElevation(
@@ -95,6 +84,7 @@ fun NoteItem(noteEntity: NoteEntity) {
         pressedElevation = 2.dp,
         focusedElevation = 4.dp
     )
+
     Card(
         modifier = Modifier
             .padding(top = 16.dp),
@@ -104,6 +94,9 @@ fun NoteItem(noteEntity: NoteEntity) {
             containerColor = MaterialTheme.colorScheme.primary
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp),
+        onClick = {
+            onNoteClick(noteEntity)
+        }
     ) {
         Column(
             modifier = Modifier

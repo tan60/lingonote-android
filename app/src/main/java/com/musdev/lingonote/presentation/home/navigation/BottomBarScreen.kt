@@ -30,4 +30,10 @@ sealed class BottomBarScreen(
         title = "Greeting",
         iconId = R.drawable.ic_baseline_add_24
     )
+
+    object Preview: BottomBarScreen(
+        route = "preview",
+        title = "Preview",
+        iconId = R.drawable.ic_baseline_close_24
+    )
 }
