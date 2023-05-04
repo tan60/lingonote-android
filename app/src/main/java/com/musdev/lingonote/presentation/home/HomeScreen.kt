@@ -111,7 +111,7 @@ fun HomeScreen(
         BottomNavGraph(
             navController = navController,
             modifier = modifier,
-            noteViewModel = notesViewModel,
+            notesViewModel = notesViewModel,
             editViewModel = editViewModel,
             previewViewModel = previewViewModel
         )
@@ -242,7 +242,6 @@ fun buildEditScreenFloatActionButton(
 
         onClick = {
             if (editViewModel.uiState.isSaveEnable) {
-
                 coroutineScope.launch {
                     editViewModel.postNewNote { result ->
                         notesViewModel.shouldUpdate(result)

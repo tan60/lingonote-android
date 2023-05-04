@@ -42,10 +42,10 @@ fun GreetingScreen() {
     ) {
         Text(
             text = "꾸준한 작문으로\n당신의 영어를\n향상 시켜보세요.",
-            lineHeight = 40.sp,
+            lineHeight = 38.sp,
             fontFamily = pretendard,
             style = TextStyle(
-                fontSize = 38.sp,
+                fontSize = 32.sp,
                 fontWeight = FontWeight.Thin,
                 color = MaterialTheme.colorScheme.onPrimary
             )
@@ -76,7 +76,7 @@ fun GreetingScreen() {
             ) {
                 Icon(
                     painter = painterResource(
-                        id = R.drawable.ic_baseline_auto_graph_24
+                        id = R.drawable.ic_baseline_auto_fix_high_24
                     ),
                     contentDescription = "Let's start",
                     tint = MaterialTheme.colorScheme.onPrimary,
@@ -86,7 +86,7 @@ fun GreetingScreen() {
                     modifier = Modifier.padding(14.dp),
                     text = "AI 교정으로 더 나은 표현을 익혀보세요.",
                     style = TextStyle(
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Light,
                         color = MaterialTheme.colorScheme.onPrimary
                     ),
@@ -95,33 +95,8 @@ fun GreetingScreen() {
                 )
             }
         }
-        /*Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp))
-        Text(
-            modifier = Modifier.align(Alignment.End),
-            text = "AI 교정으로 더 나은 표현을 익혀보세요.",
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Light,
-                color = MaterialTheme.colorScheme.secondary,
-                fontFamily = pretendard
-            )
-        )*//*Spacer(modifier = Modifier
-            .fillMaxWidth()
-            .height(8.dp))
-        Text(
-            modifier = Modifier.align(Alignment.End),
-            text = "AI 교정으로 더 나은 표현을 익혀보세요.",
-            style = TextStyle(
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Light,
-                color = MaterialTheme.colorScheme.secondary,
-                fontFamily = pretendard
-            )
-        )*/
         Spacer(modifier = Modifier
             .fillMaxWidth()
-            .height(150.dp))
+            .height(210.dp))
     }
 }

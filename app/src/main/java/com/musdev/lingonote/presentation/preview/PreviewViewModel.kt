@@ -30,11 +30,9 @@ class PreviewViewModel @Inject constructor(
         uiState = uiState.copy(enableDelete = enableDelete)
     }
 
-    fun initDeleteState() {
-        uiState = uiState.copy(deleteState = RequestState.IDLE)
-    }
 
-    fun initCorrectState() {
+    fun initUiState() {
+        uiState = uiState.copy(deleteState = RequestState.IDLE)
         uiState = uiState.copy(correctState = RequestState.IDLE)
     }
 
@@ -65,7 +63,7 @@ class PreviewViewModel @Inject constructor(
         }
     }
 
-    fun deleteNote() {
+    fun removeNote() {
         if  (deleteJob == null) {
             uiState = uiState.copy(deleteState = RequestState.REQUEST)
             deleteJob = viewModelScope.launch(Dispatchers.IO) {

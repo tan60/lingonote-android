@@ -35,12 +35,12 @@ class NotesViewModel @Inject constructor(
             }
             else -> {
                 //items are exist
-                if (shouldUpdate) {
+                /*if (shouldUpdate) {
                     //update last items
                     fetchLastNote()
                     shouldUpdate = false
 
-                }
+                }*/
             }
         }
     }
@@ -94,7 +94,8 @@ class NotesViewModel @Inject constructor(
 
     fun shouldUpdate(shouldUpdate: Boolean) {
         this.shouldUpdate = shouldUpdate
-        fetchNotesAtFirst()
+        uiState.noteItems.clear()
+        //fetchNotesAtFirst()
     }
 }
 

@@ -15,13 +15,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,11 +38,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
+import com.musdev.lingonote.R
+import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
@@ -47,7 +47,9 @@ import com.musdev.lingonote.ui.theme.pretendard
 @Composable
 fun PreviewScreen(
     modifier: Modifier,
-    previewViewModel: PreviewViewModel
+    previewViewModel: PreviewViewModel,
+    onCloseClick: () -> Unit,
+    onRemoteNoteClick: (noteEntity: NoteEntity) -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -67,12 +69,11 @@ fun PreviewScreen(
             BoxWithConstraints(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(16.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(8.dp)
+                        .padding(24.dp)
                         .align(Alignment.TopStart),
                 ) {
                     //topic
@@ -113,11 +114,11 @@ fun PreviewScreen(
                     }
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
-                        .height(8.dp))
+                        .height(16.dp))
                     //content
                     Text(
                         modifier = Modifier
-                            .padding(bottom = 54.dp)
+                            .padding(bottom = 24.dp)
                             .verticalScroll(rememberScrollState()),
                         text = previewViewModel.currentNote.content,
                         style = TextStyle(
@@ -128,13 +129,65 @@ fun PreviewScreen(
                         )
                     )
                 }
-                Box(
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .background(Color.White)
+                        .padding(6.dp)
                         .align(Alignment.BottomStart)
-                )
+                ) {
+                    when (previewViewModel.uiState.deleteState) {
+                        RequestState.IDLE, RequestState.ERROR -> {
+                            IconButton(onClick = {
+                                previewViewModel.removeNote()
+                            }) {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(R.drawable.ic_baseline_delete_outline_24),
+                                    contentDescription = "delete",
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                        }
+                        RequestState.REQUEST -> {
+                            Box(modifier = Modifier.padding(12.dp)) {
+                                CircularProgressIndicator(
+                                    modifier = Modifier.size(18.dp),
+                                    color = MaterialTheme.colorScheme.onPrimary,
+                                    strokeWidth = 3.dp
+                                )
+                            }
+                        }
+                        RequestState.DONE -> {
+                            IconButton(onClick = {
+                                //do nothing, this screen will be closed
+                            }) {
+                                Icon(
+                                    modifier = Modifier.size(24.dp),
+                                    painter = painterResource(R.drawable.ic_baseline_delete_outline_24),
+                                    contentDescription = "delete",
+                                    tint = MaterialTheme.colorScheme.onPrimary
+                                )
+                            }
+                            previewViewModel.initUiState()
+                            onRemoteNoteClick(previewViewModel.currentNote)
+                        }
+                    }
+
+                    IconButton(onClick = {
+                        previewViewModel.initUiState()
+                        onCloseClick()
+                    }) {
+                        Icon(
+                            modifier = Modifier.size(24.dp),
+                            painter = painterResource(R.drawable.ic_baseline_keyboard_arrow_down_24),
+                            contentDescription = "close",
+                            tint = MaterialTheme.colorScheme.onPrimary
+                        )
+                    }
+                }
             }
         }
     }
