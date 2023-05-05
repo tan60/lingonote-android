@@ -47,7 +47,7 @@ import com.musdev.lingonote.ui.theme.pretendard
 @Composable
 fun PreviewScreen(
     modifier: Modifier,
-    previewViewModel: PreviewViewModel,
+    viewViewModel: PreviewViewModel,
     onCloseClick: () -> Unit,
     onRemoteNoteClick: (noteEntity: NoteEntity) -> Unit
 ) {
@@ -78,7 +78,7 @@ fun PreviewScreen(
                 ) {
                     //topic
                     Text(
-                        text = previewViewModel.currentNote.topic,
+                        text = viewViewModel.currentNote.topic,
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontWeight = FontWeight.Normal,
@@ -97,13 +97,13 @@ fun PreviewScreen(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Row() {
-                            AddPreviewMode(previewMode = PreviewMode.ORIGINAL, currentPreviewMode = previewViewModel.uiState.previewMode)
+                            AddPreviewMode(previewMode = PreviewMode.ORIGINAL, currentPreviewMode = viewViewModel.uiState.previewMode)
                             Spacer(modifier = Modifier.width(5.dp))
-                            AddPreviewMode(previewMode = PreviewMode.CORRECTED, currentPreviewMode = previewViewModel.uiState.previewMode)
+                            AddPreviewMode(previewMode = PreviewMode.CORRECTED, currentPreviewMode = viewViewModel.uiState.previewMode)
                         }
                         //issue date
                         Text(
-                            text = previewViewModel.currentNote.issueDate,
+                            text = viewViewModel.currentNote.issueDate,
                             style = TextStyle(
                                 fontSize = 16.sp,
                                 fontFamily = pretendard,
@@ -120,7 +120,7 @@ fun PreviewScreen(
                         modifier = Modifier
                             .padding(bottom = 24.dp)
                             .verticalScroll(rememberScrollState()),
-                        text = previewViewModel.currentNote.content,
+                        text = viewViewModel.currentNote.content,
                         style = TextStyle(
                             fontSize = 24.sp,
                             fontFamily = pretendard,
@@ -138,10 +138,10 @@ fun PreviewScreen(
                         .padding(6.dp)
                         .align(Alignment.BottomStart)
                 ) {
-                    when (previewViewModel.uiState.deleteState) {
+                    when (viewViewModel.uiState.deleteState) {
                         RequestState.IDLE, RequestState.ERROR -> {
                             IconButton(onClick = {
-                                previewViewModel.removeNote()
+                                viewViewModel.removeNote()
                             }) {
                                 Icon(
                                     modifier = Modifier.size(24.dp),
@@ -171,13 +171,13 @@ fun PreviewScreen(
                                     tint = MaterialTheme.colorScheme.onPrimary
                                 )
                             }
-                            previewViewModel.initUiState()
-                            onRemoteNoteClick(previewViewModel.currentNote)
+                            viewViewModel.initUiState()
+                            onRemoteNoteClick(viewViewModel.currentNote)
                         }
                     }
 
                     IconButton(onClick = {
-                        previewViewModel.initUiState()
+                        viewViewModel.initUiState()
                         onCloseClick()
                     }) {
                         Icon(

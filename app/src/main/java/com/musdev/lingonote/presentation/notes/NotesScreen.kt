@@ -27,23 +27,17 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.musdev.lingonote.core.domain.entities.NoteEntity
-import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.ui.theme.pretendard
 
-lateinit var navController: NavHostController
 lateinit var onNoteClick: (noteEntity: NoteEntity) -> Unit
 @Composable
 fun NotesScreen(
-    nav: NavHostController,
     modifier: Modifier,
     viewModel: NotesViewModel,
     onItemClick: (noteEntity: NoteEntity) -> Unit
 ) {
-    navController = nav
     onNoteClick = onItemClick
 
     SideEffect {
@@ -84,16 +78,9 @@ fun NoteListSection(noteEntities: List<NoteEntity>) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NoteItem(noteEntity: NoteEntity) {
-    val customCardColors = CardDefaults.cardElevation(
-        defaultElevation = 10.dp,
-        pressedElevation = 2.dp,
-        focusedElevation = 4.dp
-    )
-
     Card(
         modifier = Modifier
             .padding(top = 16.dp),
-        //.clip(RoundedCornerShape(16.dp))
         shape = CardDefaults.shape,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primary
@@ -162,7 +149,6 @@ fun NoteItem(noteEntity: NoteEntity) {
                         fontSize = 16.sp,
                         fontFamily = pretendard,
                         fontWeight = FontWeight.Light,
-                        //color = MaterialTheme.colorScheme.onSecondary
                     )
                 )
             }

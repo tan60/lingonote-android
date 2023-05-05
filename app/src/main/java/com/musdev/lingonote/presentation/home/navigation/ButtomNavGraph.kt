@@ -12,6 +12,9 @@ import com.musdev.lingonote.presentation.achieve.AchieveScreen
 import com.musdev.lingonote.presentation.edit.EditScreen
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.coroutineScope
+import com.musdev.lingonote.presentation.home.sharedEditViewModel
+import com.musdev.lingonote.presentation.home.sharedNotesViewModel
+import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
 import com.musdev.lingonote.presentation.home.showSnackBar
 import com.musdev.lingonote.presentation.home.snackHostState
 import com.musdev.lingonote.presentation.notes.NotesScreen
@@ -22,12 +25,9 @@ import com.musdev.lingonote.presentation.preview.PreviewViewModel
 @Composable
 fun BottomNavGraph(
     navController: NavHostController,
-    modifier: Modifier,
-    notesViewModel: NotesViewModel,
-    editViewModel: EditViewModel,
-    previewViewModel: PreviewViewModel
+    modifier: Modifier
 ) {
-    var destination = if (notesViewModel.uiState.noteItems.isEmpty()) {
+    var destination = if (sharedNotesViewModel.uiState.noteItems.isEmpty()) {
         BottomBarScreen.Greeting.route
     } else {
         BottomBarScreen.Notes.route
@@ -38,9 +38,9 @@ fun BottomNavGraph(
         startDestination = destination
     ) {
         composable(route = BottomBarScreen.Notes.route) {
-            NotesScreen(modifier = modifier, nav = navController, viewModel = notesViewModel,
+            NotesScreen(modifier = modifier, viewModel = sharedNotesViewModel,
                 onItemClick = { noteEntity ->
-                    previewViewModel.setCurrentNote(noteEntity = noteEntity, enableDelete = true)
+                    sharedPreviewViewModel.setCurrentNote(noteEntity = noteEntity, enableDelete = true)
                     navController.navigate(BottomBarScreen.Preview.route) {
                         popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
@@ -52,11 +52,11 @@ fun BottomNavGraph(
             AchieveScreen()
         }
         composable(route = BottomBarScreen.Edit.route) {
-            EditScreen(modifier = modifier, editViewModel = editViewModel)
+            EditScreen(modifier = modifier, viewModel = sharedEditViewModel)
         }
         composable(route = BottomBarScreen.Preview.route) {
             PreviewScreen(modifier = modifier,
-                previewViewModel = previewViewModel,
+                viewViewModel = sharedPreviewViewModel,
                 onCloseClick = {
                     navController.navigate(BottomBarScreen.Notes.route) {
                         popUpTo(navController.graph.findStartDestination().id)
@@ -64,7 +64,7 @@ fun BottomNavGraph(
                     }
                 },
                 onRemoteNoteClick = { noteEntity ->
-                    notesViewModel.shouldUpdate(true)
+                    sharedNotesViewModel.shouldUpdate(true)
                     showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "Remove Note!")
 
                     navController.navigate(BottomBarScreen.Notes.route) {

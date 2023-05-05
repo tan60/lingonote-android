@@ -66,6 +66,11 @@ import kotlinx.coroutines.launch
 
 lateinit var snackHostState: SnackbarHostState
 lateinit var coroutineScope: CoroutineScope
+lateinit var sharedNavHostController: NavHostController
+
+lateinit var sharedNotesViewModel: NotesViewModel
+lateinit var sharedEditViewModel: EditViewModel
+lateinit var sharedPreviewViewModel: PreviewViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -75,7 +80,12 @@ fun HomeScreen(
     editViewModel: EditViewModel,
     previewViewModel: PreviewViewModel
 ) {
-    val navController = rememberNavController()
+
+    sharedNotesViewModel = notesViewModel
+    sharedEditViewModel = editViewModel
+    sharedPreviewViewModel = previewViewModel
+
+    sharedNavHostController = rememberNavController()
     snackHostState = remember { SnackbarHostState() }
     coroutineScope = rememberCoroutineScope()
 
@@ -84,36 +94,29 @@ fun HomeScreen(
             SnackbarHost(snackHostState)
         },
         topBar = {
-            buildTopBar(navController = navController)
+            buildTopBar(navController = sharedNavHostController)
         },
         floatingActionButton = {
             Row() {
-                when (getCurrentRoute(navController = navController)) {
+                when (getCurrentRoute(navController = sharedNavHostController)) {
                     BottomBarScreen.Notes.route, BottomBarScreen.Greeting.route -> {
-                        buildNotesScreenActionButton(navController = navController)
+                        buildNotesScreenActionButton(navController = sharedNavHostController)
                     }
                     BottomBarScreen.Edit.route -> {
-                        buildEditScreenFloatActionButton(
-                            navController = navController,
-                            editViewModel = editViewModel,
-                            notesViewModel = notesViewModel
-                        )
+                        buildEditScreenFloatActionButton()
                     }
                 }
             }
         },
         floatingActionButtonPosition = FabPosition.End,
         bottomBar = {
-            buildBottomBar(navController = navController)
+            buildBottomBar(navController = sharedNavHostController)
         }
 
     ) { contentPadding ->
         BottomNavGraph(
-            navController = navController,
-            modifier = modifier,
-            notesViewModel = notesViewModel,
-            editViewModel = editViewModel,
-            previewViewModel = previewViewModel
+            navController = sharedNavHostController,
+            modifier = modifier
         )
     }
 }
@@ -156,7 +159,13 @@ fun buildTopBar(navController: NavHostController) {
                     ) {
                         IconButton(
                             onClick = {
-                                navController.navigate(BottomBarScreen.Notes.route) {
+                                var destination = if (sharedNotesViewModel.uiState.noteItems.isEmpty()) {
+                                    BottomBarScreen.Greeting.route
+                                } else {
+                                    BottomBarScreen.Notes.route
+                                }
+
+                                navController.navigate(destination) {
                                     popUpTo(navController.graph.findStartDestination().id)
                                     launchSingleTop = true
                                 }
@@ -206,17 +215,14 @@ fun buildNotesScreenActionButton(navController: NavHostController) {
 
 @Composable
 fun buildEditScreenFloatActionButton(
-    navController: NavHostController,
-    notesViewModel: NotesViewModel,
-    editViewModel: EditViewModel
 ) {
     FloatingActionButton(
-        containerColor = if (editViewModel.uiState.isPreviewEnable)
+        containerColor = if (sharedEditViewModel.uiState.isPreviewEnable)
             MaterialTheme.colorScheme.secondary
         else MaterialTheme.colorScheme.tertiary,
 
         onClick = {
-            if (editViewModel.uiState.isPreviewEnable) {
+            if (sharedEditViewModel.uiState.isPreviewEnable) {
                 //go to preview screen
             }
         }
@@ -228,7 +234,7 @@ fun buildEditScreenFloatActionButton(
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_remove_red_eye_24),
                 contentDescription = "preview",
-                tint = if (editViewModel.uiState.isPreviewEnable)
+                tint = if (sharedEditViewModel.uiState.isPreviewEnable)
                     MaterialTheme.colorScheme.onSecondary
                 else MaterialTheme.colorScheme.onTertiary,
             )
@@ -236,21 +242,21 @@ fun buildEditScreenFloatActionButton(
     }
     Spacer(modifier = Modifier.width(8.dp))
     FloatingActionButton(
-        containerColor = if (editViewModel.uiState.isPreviewEnable)
+        containerColor = if (sharedEditViewModel.uiState.isPreviewEnable)
             MaterialTheme.colorScheme.secondary
         else MaterialTheme.colorScheme.tertiary,
 
         onClick = {
-            if (editViewModel.uiState.isSaveEnable) {
+            if (sharedEditViewModel.uiState.isSaveEnable) {
                 coroutineScope.launch {
-                    editViewModel.postNewNote { result ->
-                        notesViewModel.shouldUpdate(result)
+                    sharedEditViewModel.postNewNote { result ->
+                        sharedNotesViewModel.shouldUpdate(result)
                         showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "New note is created!")
                     }
                 }
 
-                navController.navigate(BottomBarScreen.Notes.route) {
-                    popUpTo(navController.graph.findStartDestination().id)
+                sharedNavHostController.navigate(BottomBarScreen.Notes.route) {
+                    popUpTo(sharedNavHostController.graph.findStartDestination().id)
                     launchSingleTop = true
                 }
             }
@@ -263,7 +269,7 @@ fun buildEditScreenFloatActionButton(
             Icon(
                 painter = painterResource(id = R.drawable.ic_baseline_check_24),
                 contentDescription = "save",
-                tint = if (editViewModel.uiState.isPreviewEnable)
+                tint = if (sharedEditViewModel.uiState.isPreviewEnable)
                     MaterialTheme.colorScheme.onSecondary
                 else MaterialTheme.colorScheme.onTertiary,
             )

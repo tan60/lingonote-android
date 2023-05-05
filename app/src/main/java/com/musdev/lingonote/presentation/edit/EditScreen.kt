@@ -28,7 +28,7 @@ import com.musdev.lingonote.ui.theme.pretendard
 @Composable
 fun EditScreen(
     modifier: Modifier,
-    editViewModel: EditViewModel
+    viewModel: EditViewModel
 ) {
     var topicText by remember {
         mutableStateOf(TextFieldValue(""))
@@ -45,7 +45,7 @@ fun EditScreen(
                 value = topicText,
                 onValueChange = {
                     topicText = it
-                    editViewModel.setTopicText(topicText.text)
+                    viewModel.setTopicText(topicText.text)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(
@@ -84,7 +84,7 @@ fun EditScreen(
                 value = contentText,
                 onValueChange = {
                     contentText = it
-                    editViewModel.setContentText(contentText.text)
+                    viewModel.setContentText(contentText.text)
                 },
                 modifier = Modifier
                     .fillMaxWidth()
