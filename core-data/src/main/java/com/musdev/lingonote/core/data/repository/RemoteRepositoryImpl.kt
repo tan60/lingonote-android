@@ -20,7 +20,7 @@ class RemoteRepositoryImpl @Inject constructor(
 
     override suspend fun queryGPTEdit(apiUrl: String, apiKey: String, requestBody: GPTRequestModel): DataResponse<GPTResponseDTO> {
         runCatching {
-            ApiService.httpClient.post(apiUrl) {
+            apiService.httpClient.post(apiUrl) {
                 headers {
                     append("Authorization", "Bearer $apiKey")
                 }

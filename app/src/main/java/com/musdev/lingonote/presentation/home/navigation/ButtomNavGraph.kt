@@ -56,14 +56,13 @@ fun BottomNavGraph(
         }
         composable(route = BottomBarScreen.Preview.route) {
             PreviewScreen(modifier = modifier,
-                viewViewModel = sharedPreviewViewModel,
                 onCloseClick = {
                     navController.navigate(BottomBarScreen.Notes.route) {
                         popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
                     }
                 },
-                onRemoteNoteClick = { noteEntity ->
+                onRemoveNoteClick = { noteEntity ->
                     sharedNotesViewModel.shouldUpdate(true)
                     showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "Remove Note!")
 

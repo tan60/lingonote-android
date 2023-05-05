@@ -1,13 +1,12 @@
 package com.musdev.lingonote.core.data.repository
 
-import com.musdev.lingonote.core.data.model.AchieveDTO
 import com.musdev.lingonote.core.data.services.DbService
 import com.musdev.lingonote.core.data.services.database.dto.Achieve
 import com.musdev.lingonote.core.data.services.database.dto.Note
 import javax.inject.Inject
 
 class LocalRepositoryImpl @Inject constructor(
-    private val dbService: DbService
+    private val dbService: DbService,
 ) : LocalRepository {
 
     private val dbNoteDao by lazy { dbService.noteDBDao }

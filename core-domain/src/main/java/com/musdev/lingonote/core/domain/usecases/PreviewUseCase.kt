@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class PreviewUseCase @Inject constructor(
     private val localRepository: LocalRepository,
-    private val remoteRepository: RemoteRepository
+    private val remoteRepository: RemoteRepository,
 ) {
     suspend fun correctAI(content: String): AICorrectEntity {
         /**

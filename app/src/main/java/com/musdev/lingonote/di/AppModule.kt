@@ -25,10 +25,10 @@ object AppModule {
     fun provideApplicationContext(@ApplicationContext context: Context): Context {
         return context
     }
-/*
+
     @Singleton
     @Provides
-    fun provideSharedPreference(sharedPreferences: SharedPreferences): SharedPreferences {
-        return sharedPreferences
-    }*/
+    fun provideSharedPreference(@ApplicationContext sharedPref: SharedPreferences): SharedPreferences {
+        return sharedPref
+    }
 }

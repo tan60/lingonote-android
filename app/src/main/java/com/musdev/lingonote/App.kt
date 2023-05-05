@@ -9,14 +9,14 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class App : Application() {
     companion object {
-        lateinit var preferences: SharedPreferences
+        lateinit var sharedPref: SharedPreferences
     }
 
     private val preferencesName = "lingonote-preferences"
 
     override fun onCreate() {
         super.onCreate()
-        preferences = getSharedPreferences(preferencesName, Activity.MODE_PRIVATE)
+        sharedPref = getSharedPreferences(preferencesName, Activity.MODE_PRIVATE)
     }
 
     override fun onTerminate() {

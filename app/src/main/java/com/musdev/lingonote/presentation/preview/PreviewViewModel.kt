@@ -1,10 +1,13 @@
 package com.musdev.lingonote.presentation.preview
 
+import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.musdev.lingonote.App
 import com.musdev.lingonote.core.domain.entities.AICorrectEntity
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.PreviewUseCase
@@ -24,6 +27,15 @@ class PreviewViewModel @Inject constructor(
     private var correctJob: Job? = null
     lateinit var currentNote: NoteEntity
 
+    private var openAIKeyValue = ""
+    private val OpenAIKeyName = "OpenAIKey"
+
+    init {
+         App.sharedPref.getString(OpenAIKeyName, "")?.let {
+            openAIKeyValue = it
+        }
+    }
+
     fun setCurrentNote(noteEntity: NoteEntity, enableDelete: Boolean) {
         this.currentNote = noteEntity
         uiState = uiState.copy(correctedContent = this.currentNote.correctedContent)
@@ -36,6 +48,26 @@ class PreviewViewModel @Inject constructor(
         uiState = uiState.copy(correctState = RequestState.IDLE)
     }
 
+    fun setPreviewMode(previewMode: PreviewMode) {
+        uiState = uiState.copy(previewMode = previewMode)
+    }
+
+    fun isOpenAIKeyExist(): Boolean {
+        return openAIKeyValue.isNotEmpty()
+    }
+
+    fun setOpenAIKey(keyValue: String) {
+        openAIKeyValue = keyValue
+        with(App.sharedPref.edit()) {
+            putString(OpenAIKeyName, openAIKeyValue)
+            apply()
+        }
+    }
+
+    fun getOpenAIKey(): String {
+        return openAIKeyValue
+    }
+
     fun correctAI(content: String) {
         if (correctJob == null) {
             uiState = uiState.copy(correctState = RequestState.REQUEST)
@@ -46,7 +78,7 @@ class PreviewViewModel @Inject constructor(
                     when(aiCorrectEntity.isSuccess) {
                         true -> {
                             currentNote.correctedContent = aiCorrectEntity.correctedContent
-                            previewUseCase.deleteNote(currentNote.postNo)
+                            //previewUseCase.deleteNote(currentNote.postNo)
                         }
                         false -> {
                             //update error message
