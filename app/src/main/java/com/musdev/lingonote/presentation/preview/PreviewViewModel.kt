@@ -38,14 +38,16 @@ class PreviewViewModel @Inject constructor(
 
     fun setCurrentNote(noteEntity: NoteEntity, enableDelete: Boolean) {
         this.currentNote = noteEntity
-        uiState = uiState.copy(correctedContent = this.currentNote.correctedContent)
         uiState = uiState.copy(enableDelete = enableDelete)
     }
-
 
     fun initUiState() {
         uiState = uiState.copy(deleteState = RequestState.IDLE)
         uiState = uiState.copy(correctState = RequestState.IDLE)
+    }
+
+    fun initPreviewMode() {
+        setPreviewMode(PreviewMode.ORIGINAL)
     }
 
     fun setPreviewMode(previewMode: PreviewMode) {

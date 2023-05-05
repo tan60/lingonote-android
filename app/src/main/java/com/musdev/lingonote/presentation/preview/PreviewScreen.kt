@@ -1,7 +1,5 @@
 package com.musdev.lingonote.presentation.preview
 
-import android.graphics.Paint.Align
-import android.widget.ImageButton
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -21,14 +19,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -61,7 +57,6 @@ import androidx.compose.ui.unit.sp
 import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
-import com.musdev.lingonote.presentation.home.showSnackBar
 import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
@@ -110,7 +105,7 @@ fun PreviewScreen(
                     Text(
                         text = sharedPreviewViewModel.currentNote.topic,
                         style = TextStyle(
-                            fontSize = 24.sp,
+                            fontSize = 28.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = pretendard,
                             color = MaterialTheme.colorScheme.onPrimary
@@ -118,33 +113,40 @@ fun PreviewScreen(
                         maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
-                    Spacer(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp))
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Row() {
-                            AddPreviewModeItem(previewMode = PreviewMode.ORIGINAL, currentPreviewMode = sharedPreviewViewModel.uiState.previewMode)
-                            Spacer(modifier = Modifier.width(5.dp))
-                            AddPreviewModeItem(previewMode = PreviewMode.CORRECTED, currentPreviewMode = sharedPreviewViewModel.uiState.previewMode)
-                        }
-                        //issue date
-                        Text(
-                            text = sharedPreviewViewModel.currentNote.issueDate,
-                            style = TextStyle(
-                                fontSize = 16.sp,
-                                fontFamily = pretendard,
-                                fontWeight = FontWeight.Light,
-                                //color = MaterialTheme.colorScheme.onSecondary
+
+                    if (sharedPreviewViewModel.uiState.enableDelete) {
+                        Spacer(modifier = Modifier
+                            .fillMaxWidth()
+                            .height(16.dp))
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            Row() {
+                                AddPreviewModeItem(previewMode = PreviewMode.ORIGINAL, currentPreviewMode = sharedPreviewViewModel.uiState.previewMode)
+                                Spacer(modifier = Modifier.width(5.dp))
+                                AddPreviewModeItem(
+                                    previewMode = PreviewMode.CORRECTED,
+                                    currentPreviewMode = sharedPreviewViewModel.uiState.previewMode
+                                )
+                            }
+                            //issue date
+                            Text(
+                                text = sharedPreviewViewModel.currentNote.issueDate,
+                                style = TextStyle(
+                                    fontSize = 16.sp,
+                                    fontFamily = pretendard,
+                                    fontWeight = FontWeight.Light,
+                                    //color = MaterialTheme.colorScheme.onSecondary
+                                )
                             )
-                        )
+                        }
                     }
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(16.dp))
+
                     //content
                     when (sharedPreviewViewModel.uiState.previewMode) {
                         PreviewMode.ORIGINAL -> {
@@ -162,155 +164,147 @@ fun PreviewScreen(
                             )
                         }
                         PreviewMode.CORRECTED -> {
-                            when (sharedPreviewViewModel.uiState.correctedContent.isEmpty()) {
+                            when(openAIKey.isNotEmpty()) { //openAI KEY가 있는 상태
                                 true -> {
-                                    when(openAIKey.isNotEmpty()) { //openAI KEY가 있는 상태
-                                        true -> {
-                                            when(sharedPreviewViewModel.currentNote.correctedContent.isEmpty()) {
-                                                true -> { //AI 교정 내용이 없는 상태 --> AI 교정 요청 상태를 표시해야 함
-                                                    when (sharedPreviewViewModel.uiState.correctState) {
-                                                        RequestState.REQUEST -> {
-                                                            Box(modifier.fillMaxSize()) {
-                                                                CircularProgressIndicator(
-                                                                    color = MaterialTheme.colorScheme.onPrimary,
-                                                                    modifier = Modifier.align(Alignment.Center)
+                                    when(sharedPreviewViewModel.currentNote.correctedContent.isEmpty()) {
+                                        true -> { //AI 교정 내용이 없는 상태 --> AI 교정 요청 상태를 표시해야 함
+                                            when (sharedPreviewViewModel.uiState.correctState) {
+                                                RequestState.REQUEST -> {
+                                                    Box(modifier.fillMaxSize()) {
+                                                        CircularProgressIndicator(
+                                                            color = MaterialTheme.colorScheme.onPrimary,
+                                                            modifier = Modifier.align(Alignment.Center)
+                                                        )
+                                                    }
+                                                }
+                                                RequestState.ERROR -> {
+                                                    Column(
+                                                        horizontalAlignment = Alignment.CenterHorizontally,
+                                                        modifier = modifier
+                                                            .wrapContentHeight()
+                                                    ) {
+                                                        Text(
+                                                            text = "오류 : \n${sharedPreviewViewModel.uiState.correctedError}",
+                                                            style = TextStyle(
+                                                                fontSize = 21.sp,
+                                                                fontFamily = pretendard,
+                                                                fontWeight = FontWeight.Light,
+                                                                color = MaterialTheme.colorScheme.onPrimary
+                                                            )
+                                                        )
+                                                        Spacer(modifier = Modifier.height(16.dp))
+                                                        TextButton(
+                                                            modifier = Modifier.align(Alignment.End),
+                                                            onClick = {
+                                                                sharedPreviewViewModel.initUiState()
+                                                                sharedPreviewViewModel.correctAI(sharedPreviewViewModel.currentNote.content)
+                                                            },
+                                                            colors = ButtonDefaults.buttonColors(
+                                                                containerColor =  MaterialTheme.colorScheme.onPrimary,
+                                                                contentColor = MaterialTheme.colorScheme.primary
+                                                            ),
+                                                            shape = RoundedCornerShape(6.dp)
+                                                        ) {
+                                                            Text(
+                                                                text = "Retry",
+                                                                style = TextStyle(
+                                                                    fontSize = 16.sp,
+                                                                    fontFamily = pretendard,
+                                                                    color = MaterialTheme.colorScheme.primary
                                                                 )
-                                                            }
-                                                        }
-                                                        RequestState.ERROR -> {
-                                                            Column(
-                                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                                modifier = modifier
-                                                                    .wrapContentHeight()
-                                                            ) {
-                                                                Text(
-                                                                    text = "오류 : \n${sharedPreviewViewModel.uiState.correctedError}",
-                                                                    style = TextStyle(
-                                                                        fontSize = 21.sp,
-                                                                        fontFamily = pretendard,
-                                                                        fontWeight = FontWeight.Light,
-                                                                        color = MaterialTheme.colorScheme.onPrimary
-                                                                    )
-                                                                )
-                                                                Spacer(modifier = Modifier.height(16.dp))
-                                                                TextButton(
-                                                                    modifier = Modifier.align(Alignment.End),
-                                                                    onClick = {
-                                                                        sharedPreviewViewModel.initUiState()
-                                                                        sharedPreviewViewModel.correctAI(sharedPreviewViewModel.currentNote.content)
-                                                                    },
-                                                                    colors = ButtonDefaults.buttonColors(
-                                                                        containerColor =  MaterialTheme.colorScheme.onPrimary,
-                                                                        contentColor = MaterialTheme.colorScheme.primary
-                                                                    ),
-                                                                    shape = RoundedCornerShape(6.dp)
-                                                                ) {
-                                                                    Text(
-                                                                        text = "Retry",
-                                                                        style = TextStyle(
-                                                                            fontSize = 16.sp,
-                                                                            fontFamily = pretendard,
-                                                                            color = MaterialTheme.colorScheme.primary
-                                                                        )
-                                                                    )
-                                                                }
-                                                            }
-                                                        }
-                                                        else -> {
-                                                            //do nothing
+                                                            )
                                                         }
                                                     }
                                                 }
-                                                false -> { //이미 AI 교정 된 내용이 있는 상태
-                                                    Text(
-                                                        modifier = Modifier
-                                                            .padding(bottom = 24.dp)
-                                                            .verticalScroll(rememberScrollState()),
-                                                        text = sharedPreviewViewModel.currentNote.correctedContent,
-                                                        style = TextStyle(
-                                                            fontSize = 24.sp,
-                                                            fontFamily = pretendard,
-                                                            fontWeight = FontWeight.Light,
-                                                            color = MaterialTheme.colorScheme.onPrimary
-                                                        )
-                                                    )
+                                                else -> {
+                                                    //do nothing
                                                 }
                                             }
-
                                         }
-                                        false -> { //openAI 키가 없는 상태
-                                            Column(
-                                                modifier.fillMaxWidth()
-                                            ) {
-                                                Text(text = "Open AI Key is not registered.",
-                                                    style = TextStyle(
-                                                        fontSize = 16.sp,
-                                                        fontFamily = pretendard,
-                                                        fontWeight = FontWeight.Light,
-                                                        color = MaterialTheme.colorScheme.onPrimary
-                                                    ))
-                                                Spacer(modifier = Modifier.height(8.dp))
-                                                OutlinedTextField(
-                                                    value = keyText,
-                                                    onValueChange = {
-                                                        keyText = it
-                                                    },
-                                                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                                    modifier = Modifier
-                                                        .fillMaxWidth(),
-                                                    textStyle = TextStyle(
-                                                        fontSize = 18.sp,
-                                                        fontFamily = pretendard
-                                                    ),
-                                                    label = {
-                                                        Text(
-                                                            text = "OpenAI Key",
-                                                            style = TextStyle(
-                                                                fontSize = 18.sp,
-                                                                fontFamily = pretendard
-                                                            )
-                                                        )
-                                                    },
-                                                    placeholder = {
-                                                        Text(
-                                                            text = "Please enter your OpenAI key",
-                                                            style = TextStyle(
-                                                                fontSize = 18.sp,
-                                                                fontFamily = pretendard
-                                                            )
-                                                        )
-                                                    },
-                                                    singleLine = false,
-                                                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                                                        cursorColor = MaterialTheme.colorScheme.secondary,
-                                                        containerColor = MaterialTheme.colorScheme.background,
-                                                        focusedLabelColor = MaterialTheme.colorScheme.onSecondary,
-                                                        focusedBorderColor = MaterialTheme.colorScheme.onSecondary
-                                                    )
+                                        false -> { //이미 AI 교정 된 내용이 있는 상태
+                                            Text(
+                                                modifier = Modifier
+                                                    .padding(bottom = 24.dp)
+                                                    .verticalScroll(rememberScrollState()),
+                                                text = sharedPreviewViewModel.currentNote.correctedContent,
+                                                style = TextStyle(
+                                                    fontSize = 24.sp,
+                                                    fontFamily = pretendard,
+                                                    fontWeight = FontWeight.Light,
+                                                    color = MaterialTheme.colorScheme.onPrimary
                                                 )
-                                                Spacer(modifier = Modifier.height(4.dp))
-                                                Button(
-                                                    onClick = {
-                                                        openAIKey = keyText.text
-                                                        sharedPreviewViewModel.setOpenAIKey(keyText.text)
-                                                    },
-                                                    modifier = Modifier
-                                                        .wrapContentSize()
-                                                        .align(Alignment.End),
-                                                    colors = ButtonDefaults.buttonColors(
-                                                        containerColor = MaterialTheme.colorScheme.onPrimary,
-                                                        contentColor = MaterialTheme.colorScheme.primary
-                                                    )
-                                                ) {
-                                                    Text("Register", style = TextStyle(fontSize = 14.sp))
-                                                }
-                                            }
+                                            )
                                         }
                                     }
+
                                 }
-                                false -> {
-                                    //show corrected Content
-                                    Text(text = "show corrected Content")
+                                false -> { //openAI 키가 없는 상태
+                                    Column(
+                                        modifier.fillMaxWidth()
+                                    ) {
+                                        Text(text = "Open AI Key is not registered.",
+                                            style = TextStyle(
+                                                fontSize = 16.sp,
+                                                fontFamily = pretendard,
+                                                fontWeight = FontWeight.Light,
+                                                color = MaterialTheme.colorScheme.onPrimary
+                                            ))
+                                        Spacer(modifier = Modifier.height(8.dp))
+                                        OutlinedTextField(
+                                            value = keyText,
+                                            onValueChange = {
+                                                keyText = it
+                                            },
+                                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                            modifier = Modifier
+                                                .fillMaxWidth(),
+                                            textStyle = TextStyle(
+                                                fontSize = 18.sp,
+                                                fontFamily = pretendard
+                                            ),
+                                            label = {
+                                                Text(
+                                                    text = "OpenAI Key",
+                                                    style = TextStyle(
+                                                        fontSize = 18.sp,
+                                                        fontFamily = pretendard
+                                                    )
+                                                )
+                                            },
+                                            placeholder = {
+                                                Text(
+                                                    text = "Please enter your OpenAI key",
+                                                    style = TextStyle(
+                                                        fontSize = 18.sp,
+                                                        fontFamily = pretendard
+                                                    )
+                                                )
+                                            },
+                                            singleLine = false,
+                                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                                cursorColor = MaterialTheme.colorScheme.secondary,
+                                                containerColor = MaterialTheme.colorScheme.background,
+                                                focusedLabelColor = MaterialTheme.colorScheme.onSecondary,
+                                                focusedBorderColor = MaterialTheme.colorScheme.onSecondary
+                                            )
+                                        )
+                                        Spacer(modifier = Modifier.height(4.dp))
+                                        Button(
+                                            onClick = {
+                                                openAIKey = keyText.text
+                                                sharedPreviewViewModel.setOpenAIKey(keyText.text)
+                                            },
+                                            modifier = Modifier
+                                                .wrapContentSize()
+                                                .align(Alignment.End),
+                                            colors = ButtonDefaults.buttonColors(
+                                                containerColor = MaterialTheme.colorScheme.onPrimary,
+                                                contentColor = MaterialTheme.colorScheme.primary
+                                            )
+                                        ) {
+                                            Text("Register", style = TextStyle(fontSize = 14.sp))
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -328,13 +322,17 @@ fun PreviewScreen(
                     when (sharedPreviewViewModel.uiState.deleteState) {
                         RequestState.IDLE, RequestState.ERROR -> {
                             IconButton(onClick = {
-                                sharedPreviewViewModel.removeNote()
+                                if (sharedPreviewViewModel.uiState.enableDelete) {
+                                    sharedPreviewViewModel.removeNote()
+                                }
                             }) {
                                 Icon(
                                     modifier = Modifier.size(24.dp),
                                     painter = painterResource(R.drawable.ic_baseline_delete_outline_24),
                                     contentDescription = "delete",
-                                    tint = MaterialTheme.colorScheme.onPrimary
+                                    tint = if (sharedPreviewViewModel.uiState.enableDelete)
+                                        MaterialTheme.colorScheme.onPrimary
+                                    else MaterialTheme.colorScheme.primary
                                 )
                             }
                         }
@@ -363,6 +361,7 @@ fun PreviewScreen(
                         }
                     }
                     IconButton(onClick = {
+                        sharedPreviewViewModel.initPreviewMode()
                         sharedPreviewViewModel.initUiState()
                         onCloseClick()
                     }) {
@@ -401,8 +400,8 @@ fun RowScope.AddPreviewModeItem(
             .clickable(onClick = {
                 sharedPreviewViewModel.setPreviewMode(previewMode = previewMode)
 
-                if (previewMode == PreviewMode.CORRECTED && sharedPreviewViewModel.currentNote.correctedContent.isEmpty()) {
-                    //request AI correct
+                if (previewMode == PreviewMode.CORRECTED
+                    && sharedPreviewViewModel.currentNote.correctedContent.isEmpty()) {
                     sharedPreviewViewModel.correctAI(sharedPreviewViewModel.currentNote.content)
                 }
             })

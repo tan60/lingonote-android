@@ -30,22 +30,21 @@ fun EditScreen(
     modifier: Modifier,
     viewModel: EditViewModel
 ) {
-    var topicText by remember {
+    /*var topicText by remember {
         mutableStateOf(TextFieldValue(""))
     }
 
     var contentText by remember {
         mutableStateOf(TextFieldValue(""))
-    }
+    }*/
 
     Box(modifier = Modifier.padding(top = 80.dp, start = 16.dp, end = 16.dp, bottom = 56.dp)) {
         Column(
         ) {
             OutlinedTextField(
-                value = topicText,
+                value = viewModel.uiState.topic,
                 onValueChange = {
-                    topicText = it
-                    viewModel.setTopicText(topicText.text)
+                    viewModel.setTopicText(it)
                 },
                 modifier = Modifier.fillMaxWidth(),
                 textStyle = TextStyle(
@@ -81,10 +80,9 @@ fun EditScreen(
             )
             Spacer(modifier = Modifier.fillMaxWidth().height(8.dp))
             OutlinedTextField(
-                value = contentText,
+                value = viewModel.uiState.content,
                 onValueChange = {
-                    contentText = it
-                    viewModel.setContentText(contentText.text)
+                    viewModel.setContentText(it)
                 },
                 modifier = Modifier
                     .fillMaxWidth()

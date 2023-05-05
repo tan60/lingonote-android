@@ -1,17 +1,21 @@
 package com.musdev.lingonote.presentation.home.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.musdev.lingonote.presentation.GreetingScreen
 import com.musdev.lingonote.presentation.achieve.AchieveScreen
 import com.musdev.lingonote.presentation.edit.EditScreen
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.coroutineScope
+import com.musdev.lingonote.presentation.home.getCurrentRoute
 import com.musdev.lingonote.presentation.home.sharedEditViewModel
 import com.musdev.lingonote.presentation.home.sharedNotesViewModel
 import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
@@ -41,10 +45,7 @@ fun BottomNavGraph(
             NotesScreen(modifier = modifier, viewModel = sharedNotesViewModel,
                 onItemClick = { noteEntity ->
                     sharedPreviewViewModel.setCurrentNote(noteEntity = noteEntity, enableDelete = true)
-                    navController.navigate(BottomBarScreen.Preview.route) {
-                        popUpTo(navController.graph.findStartDestination().id)
-                        launchSingleTop = true
-                    }
+                    navController.navigate(BottomBarScreen.Preview.route)
                 }
             )
         }
@@ -57,19 +58,28 @@ fun BottomNavGraph(
         composable(route = BottomBarScreen.Preview.route) {
             PreviewScreen(modifier = modifier,
                 onCloseClick = {
-                    navController.navigate(BottomBarScreen.Notes.route) {
-                        popUpTo(navController.graph.findStartDestination().id)
-                        launchSingleTop = true
-                    }
+                    navController.popBackStack()
+                    /*if (sharedPreviewViewModel.uiState.enableDelete) {
+                        navController.navigate(BottomBarScreen.Notes.route) {
+                            popUpTo(navController.graph.findStartDestination().id)
+                            launchSingleTop = true
+                        }
+                    } else {
+                        navController.navigate(BottomBarScreen.Edit.route) {
+                            popUpTo(navController.graph.findStartDestination().id)
+                            launchSingleTop = true
+                        }
+                    }*/
                 },
                 onRemoveNoteClick = { noteEntity ->
                     sharedNotesViewModel.shouldUpdate(true)
                     showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "Remove Note!")
 
-                    navController.navigate(BottomBarScreen.Notes.route) {
+                    navController.popBackStack()
+                    /*navController.navigate(BottomBarScreen.Notes.route) {
                         popUpTo(navController.graph.findStartDestination().id)
                         launchSingleTop = true
-                    }
+                    }*/
                 }
             )
         }

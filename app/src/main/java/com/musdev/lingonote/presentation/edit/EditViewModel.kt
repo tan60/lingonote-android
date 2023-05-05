@@ -56,6 +56,19 @@ class EditViewModel @Inject constructor(
         }
     }
 
+    fun buildNoteForPreview(): NoteEntity {
+        return buildNote(uiState.topic, uiState.content)
+    }
+
+    fun initUiState() {
+        uiState = uiState.copy(
+            topic = "",
+            content = "",
+            isPostComplete = false,
+            isSaveEnable = false,
+            isPosting = false)
+    }
+
     fun setTopicText(topic: String) {
         uiState = uiState.copy(topic = topic)
         updateEnable()

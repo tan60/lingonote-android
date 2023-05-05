@@ -164,11 +164,8 @@ fun buildTopBar(navController: NavHostController) {
                                 } else {
                                     BottomBarScreen.Notes.route
                                 }
-
-                                navController.navigate(destination) {
-                                    popUpTo(navController.graph.findStartDestination().id)
-                                    launchSingleTop = true
-                                }
+                                sharedEditViewModel.initUiState()
+                                navController.popBackStack()
                             },
                             modifier = Modifier.size(36.dp)
                         )
@@ -192,8 +189,9 @@ fun buildNotesScreenActionButton(navController: NavHostController) {
         containerColor = MaterialTheme.colorScheme.secondary,
         onClick = {
             navController.navigate(BottomBarScreen.Edit.route) {
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
+                //popUpTo(navController.graph.findStartDestination().id)
+                //launchSingleTop = true
+                restoreState = true
             }
         }
     ) {
@@ -223,7 +221,8 @@ fun buildEditScreenFloatActionButton(
 
         onClick = {
             if (sharedEditViewModel.uiState.isPreviewEnable) {
-                //go to preview screen
+                sharedPreviewViewModel.setCurrentNote(noteEntity = sharedEditViewModel.buildNoteForPreview(), enableDelete = false)
+                sharedNavHostController.navigate(BottomBarScreen.Preview.route)
             }
         }
     ) {
@@ -251,14 +250,13 @@ fun buildEditScreenFloatActionButton(
                 coroutineScope.launch {
                     sharedEditViewModel.postNewNote { result ->
                         sharedNotesViewModel.shouldUpdate(result)
+                        sharedEditViewModel.initUiState()
+
                         showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "New note is created!")
                     }
                 }
 
-                sharedNavHostController.navigate(BottomBarScreen.Notes.route) {
-                    popUpTo(sharedNavHostController.graph.findStartDestination().id)
-                    launchSingleTop = true
-                }
+                sharedNavHostController.popBackStack()
             }
         }
     ) {
@@ -379,12 +377,6 @@ fun showSnackBar(snackHostState: SnackbarHostState,
 
     coroutineScope.launch {
         snackHostState.showSnackbar(message = message)
-    }
-}
-
-fun showSnackBar(message: String, action: String) {
-    coroutineScope.launch {
-        snackHostState.showSnackbar(message = message, actionLabel = action, withDismissAction = false)
     }
 }
 
