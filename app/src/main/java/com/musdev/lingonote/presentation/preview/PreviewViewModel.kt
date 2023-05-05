@@ -73,23 +73,30 @@ class PreviewViewModel @Inject constructor(
             uiState = uiState.copy(correctState = RequestState.REQUEST)
             try {
                 correctJob = viewModelScope.launch(Dispatchers.IO) {
-                    val aiCorrectEntity: AICorrectEntity = previewUseCase.correctAI(content)
+                    val aiCorrectEntity: AICorrectEntity = previewUseCase.correctAI(content, apiKey = openAIKeyValue)
 
                     when(aiCorrectEntity.isSuccess) {
                         true -> {
                             currentNote.correctedContent = aiCorrectEntity.correctedContent
-                            //previewUseCase.deleteNote(currentNote.postNo)
+                            uiState = uiState.copy(correctState = RequestState.DONE)
+                            correctJob = null
                         }
                         false -> {
                             //update error message
+                            aiCorrectEntity.errorMessage?.let {
+                                uiState = uiState.copy(correctedError = it)
+                            } ?:{
+                                uiState = uiState.copy(correctedError = "unknown")
+                            }
+
+                            uiState = uiState.copy(correctState = RequestState.ERROR)
+                            correctJob = null
                         }
                     }
-                    uiState = uiState.copy(deleteState = RequestState.DONE)
-                    correctJob = null
                 }
 
             } catch (e: Exception) {
-                uiState = uiState.copy(deleteState = RequestState.ERROR)
+                uiState = uiState.copy(correctState = RequestState.ERROR)
                 correctJob = null
             }
         }

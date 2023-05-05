@@ -1,5 +1,6 @@
 package com.musdev.lingonote.presentation.preview
 
+import android.graphics.Paint.Align
 import android.widget.ImageButton
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
@@ -26,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -58,6 +61,7 @@ import androidx.compose.ui.unit.sp
 import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
+import com.musdev.lingonote.presentation.home.showSnackBar
 import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
@@ -165,17 +169,55 @@ fun PreviewScreen(
                                             when(sharedPreviewViewModel.currentNote.correctedContent.isEmpty()) {
                                                 true -> { //AI 교정 내용이 없는 상태 --> AI 교정 요청 상태를 표시해야 함
                                                     when (sharedPreviewViewModel.uiState.correctState) {
-                                                        RequestState.IDLE -> {
-
-                                                        }
                                                         RequestState.REQUEST -> {
-
+                                                            Box(modifier.fillMaxSize()) {
+                                                                CircularProgressIndicator(
+                                                                    color = MaterialTheme.colorScheme.onPrimary,
+                                                                    modifier = Modifier.align(Alignment.Center)
+                                                                )
+                                                            }
                                                         }
                                                         RequestState.ERROR -> {
-
+                                                            Column(
+                                                                horizontalAlignment = Alignment.CenterHorizontally,
+                                                                modifier = modifier
+                                                                    .wrapContentHeight()
+                                                            ) {
+                                                                Text(
+                                                                    text = "오류 : \n${sharedPreviewViewModel.uiState.correctedError}",
+                                                                    style = TextStyle(
+                                                                        fontSize = 21.sp,
+                                                                        fontFamily = pretendard,
+                                                                        fontWeight = FontWeight.Light,
+                                                                        color = MaterialTheme.colorScheme.onPrimary
+                                                                    )
+                                                                )
+                                                                Spacer(modifier = Modifier.height(16.dp))
+                                                                TextButton(
+                                                                    modifier = Modifier.align(Alignment.End),
+                                                                    onClick = {
+                                                                        sharedPreviewViewModel.initUiState()
+                                                                        sharedPreviewViewModel.correctAI(sharedPreviewViewModel.currentNote.content)
+                                                                    },
+                                                                    colors = ButtonDefaults.buttonColors(
+                                                                        containerColor =  MaterialTheme.colorScheme.onPrimary,
+                                                                        contentColor = MaterialTheme.colorScheme.primary
+                                                                    ),
+                                                                    shape = RoundedCornerShape(6.dp)
+                                                                ) {
+                                                                    Text(
+                                                                        text = "Retry",
+                                                                        style = TextStyle(
+                                                                            fontSize = 16.sp,
+                                                                            fontFamily = pretendard,
+                                                                            color = MaterialTheme.colorScheme.primary
+                                                                        )
+                                                                    )
+                                                                }
+                                                            }
                                                         }
-                                                        RequestState.DONE -> {
-
+                                                        else -> {
+                                                            //do nothing
                                                         }
                                                     }
                                                 }

@@ -17,7 +17,7 @@ class PreviewUseCase @Inject constructor(
     private val localRepository: LocalRepository,
     private val remoteRepository: RemoteRepository,
 ) {
-    suspend fun correctAI(content: String): AICorrectEntity {
+    suspend fun correctAI(content: String, apiKey: String): AICorrectEntity {
         /**
          * openAI Edit
          * POST : https://api.openai.com/v1/edits
@@ -25,7 +25,6 @@ class PreviewUseCase @Inject constructor(
          */
 
         val apiUrl = "https://api.openai.com/v1/edits"
-        val apiKey = "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"//invalid key for test
 
         var requestModel = GPTRequestModel().apply {
             this.model = "text-davinci-edit-001"

@@ -19,6 +19,7 @@ data class PreviewUiState(
     val previewMode: PreviewMode = PreviewMode.ORIGINAL,
     val enableDelete: Boolean = true,
     val correctedContent: String = "",
+    val correctedError: String = "",
     val deleteState: RequestState = RequestState.IDLE,
     val correctState: RequestState = RequestState.IDLE,
     val updateState: RequestState = RequestState.IDLE

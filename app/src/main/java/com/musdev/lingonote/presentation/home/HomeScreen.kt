@@ -382,3 +382,9 @@ fun showSnackBar(snackHostState: SnackbarHostState,
     }
 }
 
+fun showSnackBar(message: String, action: String) {
+    coroutineScope.launch {
+        snackHostState.showSnackbar(message = message, actionLabel = action, withDismissAction = false)
+    }
+}
+
