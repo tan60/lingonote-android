@@ -41,7 +41,7 @@ fun GreetingScreen() {
             .fillMaxHeight()
     ) {
         Text(
-            text = "꾸준한 작문으로\n당신의 영어를\n향상 시켜보세요.",
+            text = "Improve your English through writing practice.",
             lineHeight = 38.sp,
             fontFamily = pretendard,
             style = TextStyle(
@@ -52,7 +52,7 @@ fun GreetingScreen() {
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "하루 영작",
+            text = "LingoNote",
             style = TextStyle(
                 fontSize = 48.sp,
                 fontWeight = FontWeight.Light,
@@ -84,7 +84,7 @@ fun GreetingScreen() {
                 )
                 Text(
                     modifier = Modifier.padding(14.dp),
-                    text = "AI 교정으로 더 나은 표현을 익혀보세요.",
+                    text = "Learn better expressions with AI",
                     style = TextStyle(
                         fontSize = 16.sp,
                         fontWeight = FontWeight.Light,

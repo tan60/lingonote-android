@@ -210,7 +210,7 @@ fun buildNotesScreenActionButton(navController: NavHostController) {
                 tint = MaterialTheme.colorScheme.onSecondary
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("New Note")
+            Text("New Note", style = TextStyle(fontFamily = pretendard))
         }
     }
 }
@@ -276,7 +276,7 @@ fun buildEditScreenFloatActionButton(
                 else MaterialTheme.colorScheme.onTertiary,
             )
             Spacer(modifier = Modifier.width(8.dp))
-            Text("Save")
+            Text("Save", style = TextStyle(fontFamily = pretendard))
         }
     }
 }
