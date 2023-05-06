@@ -1,5 +1,3 @@
 <resources>
     <string name="app_name">LingoNote</string>
-    <string name="bottom_menu_notefeed">Notes</string>
-    <string name="bottom_menu_achieve">achieve</string>
 </resources>

@@ -1,6 +1,7 @@
 package com.musdev.lingonote.presentation.achieve
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,7 +40,10 @@ import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.AchieveEntity
 import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
 import com.musdev.lingonote.presentation.notes.NoteItem
+import com.musdev.lingonote.ui.theme.DarkDisableColor
+import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
+import java.util.Random
 
 @Composable
 fun AchieveScreen(
@@ -69,10 +73,10 @@ fun AchieveScreen(
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = "당신의\n성취 기록",
+                    text = "Your\nAchievement",
                     style = TextStyle(
                         fontSize = 28.sp,
-                        fontWeight = FontWeight.Normal,
+                        fontWeight = FontWeight.SemiBold,
                         fontFamily = pretendard,
                         color = MaterialTheme.colorScheme.onPrimary
                     )
@@ -86,7 +90,15 @@ fun AchieveScreen(
                     )
                 }
             }
-            Text(text = "5일 간 총 6개의 영문을 작성했습니다.")
+            Text(
+                text = "You created ${viewModel.uiState.totalNotesCount} notes\nin ${viewModel.uiState.totalDaysCount} days!",
+                style = TextStyle(
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Light,
+                    fontFamily = pretendard,
+                    color = MaterialTheme.colorScheme.onPrimary
+                )
+            )
             Box(modifier = Modifier.padding(bottom = 48.dp)) {
                 Row(modifier = Modifier.height(336.dp)) {
                     LazyHorizontalGrid(
@@ -105,12 +117,14 @@ fun AchieveScreen(
 
 @Composable
 fun buildAchieveItem(item: Pair<String, AchieveEntity?>) {
-    var color: Color = Color.Red
-    var text: String = ""
+    val darkTheme: Boolean = isSystemInDarkTheme()
+
+    var color: Color = Color.Transparent
+    var text = ""
 
     item.second?.let {
         if (it is AchieveEntity) {
-            color = Color.Green
+            color = Color(0x57C5B6).copy(alpha = it.postedCount * 0.333f)
             text = it.date
         }
     }
@@ -120,6 +134,12 @@ fun buildAchieveItem(item: Pair<String, AchieveEntity?>) {
             .size(48.dp)
             .padding(2.dp),
     ) {
+        Box(
+            modifier = Modifier
+                .size(40.dp)
+                .clip(RoundedCornerShape(4.dp))
+                .background(if (darkTheme) DarkDisableColor else LightDisableColor)
+        )
         Box(
             contentAlignment = Alignment.Center,
             modifier = Modifier

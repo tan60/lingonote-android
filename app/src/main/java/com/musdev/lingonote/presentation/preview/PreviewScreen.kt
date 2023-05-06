@@ -242,13 +242,6 @@ fun PreviewScreen(
                                     Column(
                                         modifier.fillMaxWidth()
                                     ) {
-                                        Text(text = "Open AI Key is not registered.",
-                                            style = TextStyle(
-                                                fontSize = 16.sp,
-                                                fontFamily = pretendard,
-                                                fontWeight = FontWeight.Light,
-                                                color = MaterialTheme.colorScheme.onPrimary
-                                            ))
                                         Spacer(modifier = Modifier.height(8.dp))
                                         OutlinedTextField(
                                             value = keyText,
@@ -291,15 +284,17 @@ fun PreviewScreen(
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Button(
                                             onClick = {
-                                                openAIKey = keyText.text
-                                                sharedPreviewViewModel.setOpenAIKey(keyText.text)
+                                                if (keyText.text.isNotEmpty()) {
+                                                    openAIKey = keyText.text
+                                                    sharedPreviewViewModel.setOpenAIKey(keyText.text)
+                                                }
                                             },
                                             modifier = Modifier
                                                 .wrapContentSize()
                                                 .align(Alignment.End),
                                             colors = ButtonDefaults.buttonColors(
-                                                containerColor = MaterialTheme.colorScheme.onPrimary,
-                                                contentColor = MaterialTheme.colorScheme.primary
+                                                containerColor = if (keyText.text.isNotEmpty()) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary,
+                                                contentColor = if (keyText.text.isNotEmpty()) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onTertiary,
                                             )
                                         ) {
                                             Text("Register", style = TextStyle(fontSize = 14.sp))
