@@ -2,6 +2,7 @@ package com.musdev.lingonote.core.domain.di
 
 import com.musdev.lingonote.core.data.repository.LocalRepository
 import com.musdev.lingonote.core.data.repository.RemoteRepository
+import com.musdev.lingonote.core.domain.usecases.AchieveUseCase
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.EditUseCase
 import com.musdev.lingonote.core.domain.usecases.NoteUseCase
@@ -37,5 +38,11 @@ object UseCaseModule {
     fun providePreviewUseCase(localRepository: LocalRepository,
                               remoteRepository: RemoteRepository): PreviewUseCase {
         return PreviewUseCase(localRepository, remoteRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAchieveUseCase(localRepository: LocalRepository): AchieveUseCase {
+        return AchieveUseCase(localRepository)
     }
 }

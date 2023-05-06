@@ -25,23 +25,11 @@ class NotesViewModel @Inject constructor(
         private set
 
     private var fetchJob: Job? = null
-
     private var shouldUpdate: Boolean = false
 
     fun fetchNotesAtFirst() {
-        when (uiState.noteItems.isEmpty()) {
-            true -> {
-                fetchNotes()
-            }
-            else -> {
-                //items are exist
-                /*if (shouldUpdate) {
-                    //update last items
-                    fetchLastNote()
-                    shouldUpdate = false
-
-                }*/
-            }
+        if (uiState.noteItems.isEmpty()) {
+            fetchNotes()
         }
     }
 

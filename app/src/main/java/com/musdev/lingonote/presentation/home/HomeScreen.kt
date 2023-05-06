@@ -53,6 +53,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.musdev.lingonote.R
+import com.musdev.lingonote.presentation.achieve.AchieveViewModel
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
@@ -71,6 +72,7 @@ lateinit var sharedNavHostController: NavHostController
 lateinit var sharedNotesViewModel: NotesViewModel
 lateinit var sharedEditViewModel: EditViewModel
 lateinit var sharedPreviewViewModel: PreviewViewModel
+lateinit var sharedAchieveViewModel: AchieveViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -78,12 +80,14 @@ fun HomeScreen(
     modifier: Modifier,
     notesViewModel: NotesViewModel,
     editViewModel: EditViewModel,
-    previewViewModel: PreviewViewModel
+    previewViewModel: PreviewViewModel,
+    achieveViewModel: AchieveViewModel
 ) {
 
     sharedNotesViewModel = notesViewModel
     sharedEditViewModel = editViewModel
     sharedPreviewViewModel = previewViewModel
+    sharedAchieveViewModel = achieveViewModel
 
     sharedNavHostController = rememberNavController()
     snackHostState = remember { SnackbarHostState() }

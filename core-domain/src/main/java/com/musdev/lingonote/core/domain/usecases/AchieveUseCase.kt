@@ -8,7 +8,7 @@ import javax.inject.Inject
 class AchieveUseCase @Inject constructor(
     private val localRepository: LocalRepository
 ) {
-    suspend fun getAchieve(): List<AchieveEntity> {
+    suspend fun fetchAchieves(): MutableList<AchieveEntity> {
         val achieves = localRepository.fetchAchieve()
 
         var achieveEntities : MutableList<AchieveEntity> = mutableListOf()
