@@ -58,6 +58,7 @@ dependencies {
 
     //hilt
     implementation(libs.hilt.android)
+    //implementation("androidx.paging:paging-compose:1.0.0-alpha14")
     kapt(libs.hilt.android.compiler)
 
 
@@ -66,7 +67,8 @@ dependencies {
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.navigation.compose)
-
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.common.ktx)
     implementation(libs.androidx.compose.activity)
     api(libs.androidx.compose.foundation)
     api(libs.androidx.compose.foundation.layout)

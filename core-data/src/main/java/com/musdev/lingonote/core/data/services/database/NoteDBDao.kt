@@ -20,6 +20,9 @@ interface NoteDBDao {
     @Query("SELECT * FROM note_table ORDER BY id DESC")
     suspend fun getAllNotes() : List<Note>
 
+    @Query("SELECT * FROM note_table ORDER BY id DESC LIMIT :limit OFFSET :offset")
+    suspend fun getNotes(limit: Int, offset: Int) : List<Note>
+
     @Query("SELECT MAX(id) as max FROM note_table")
     suspend fun getLastNoteIndex(): Int
 

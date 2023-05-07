@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material3.Card
@@ -19,6 +20,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeCompilerApi
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +30,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.paging.compose.LazyPagingItems
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.ui.theme.pretendard
 
@@ -40,9 +44,9 @@ fun NotesScreen(
 ) {
     onNoteClick = onItemClick
 
-    SideEffect {
+    /*SideEffect {
         viewModel.fetchNotesAtFirst()
-    }
+    }*/
 
     Box(
         modifier = modifier
@@ -55,10 +59,25 @@ fun NotesScreen(
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         } else {
-            NoteListSection(noteEntities = viewModel.uiState.noteItems)
+            NotesList(noteEntities = viewModel.notePager.collectAsLazyPagingItems())
+            //NoteListSection(noteEntities = viewModel.uiState.noteItems)
         }
     }
 }
+
+@Composable
+fun NotesList(noteEntities: LazyPagingItems<NoteEntity>) {
+    LazyColumn(
+        //columns = GridCells.Fixed(1),
+        contentPadding = PaddingValues(start = 10.dp, end = 10.dp, bottom = 96.dp),
+        //modifier = Modifier.fillMaxHeight().padding(bottom = 60.dp),
+    ) {
+        items(noteEntities.itemCount) {
+            NoteItem(noteEntity = noteEntities[it]!!)
+        }
+    }
+}
+
 
 @Composable
 fun NoteListSection(noteEntities: List<NoteEntity>) {

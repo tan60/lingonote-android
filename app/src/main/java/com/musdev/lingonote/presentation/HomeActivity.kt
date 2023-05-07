@@ -57,22 +57,30 @@ class HomeActivity : ComponentActivity() {
             val calendar = Calendar.getInstance()
             val dateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
 
-            for (i in 0 until 143) {
-                if (i % 3 == 0) {
+            for (i in 0 until 33) {
+                *//*if (i % 3 == 0) {
                     val date = dateFormat.format(calendar.time)
                     postNoteTest(
                         topic = "This is dummy topic $i \nprovided by the test code",
                         content = "This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. ",
                         issueDate = date)
 
-                }
+                }*//*
+
+                val date = dateFormat.format(calendar.time)
+                postNoteTest(
+                    topic = "This is dummy topic $i \nprovided by the test code",
+                    content = "This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. \n This is dummy contents  $i provided by the the code. ",
+                    issueDate = date)
+
+
                 calendar.add(Calendar.DAY_OF_YEAR, -1)
             }
         }*/
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                noteViewModel.fetchNotesAtFirst()
+                noteViewModel.getNoteTotalCount()
             }
         }
 

@@ -6,6 +6,8 @@ import com.musdev.lingonote.core.data.services.database.dto.Note
 interface LocalRepository {
     suspend fun fetchNotes(): List<Note> = listOf()
 
+    suspend fun fetchNotes(limit: Int, offset: Int): List<Note> = listOf()
+
     suspend fun postNote(note: Note): Boolean
 
     suspend fun updateNote(note: Note): Boolean

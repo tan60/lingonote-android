@@ -11,6 +11,9 @@ import kotlinx.coroutines.launch
 import java.io.IOException
 import javax.inject.Inject
 import androidx.compose.runtime.setValue
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.cachedIn
 import com.musdev.lingonote.presentation.TAG
 import kotlinx.coroutines.Dispatchers
 
@@ -27,22 +30,24 @@ class NotesViewModel @Inject constructor(
     private var fetchJob: Job? = null
     private var shouldUpdate: Boolean = false
 
+    var notePager = Pager(PagingConfig(pageSize = NotesPagingSource.LIMIT) ) {
+        NotesPagingSource(noteUseCase)
+    }.flow.cachedIn(viewModelScope)
+
     fun fetchNotesAtFirst() {
         if (uiState.noteItems.isEmpty()) {
             fetchNotes()
         }
     }
 
-    private fun fetchLastNote() {
+    fun getNoteTotalCount() {
         when (fetchJob == null) {
             true -> {
                 uiState = uiState.copy(isFetchingNotes = true)
                 fetchJob = viewModelScope.launch(Dispatchers.IO) {
                     try {
-                        val item = noteUseCase.fetchLastNote() //fetch data
-                        uiState.noteItems.add(0, item)
-
-                        uiState = uiState.copy(noteItems = uiState.noteItems) //update data state
+                        val totalCount = noteUseCase.getTotalNoteCount() //fetch data
+                        uiState = uiState.copy(isNoteEmpty = totalCount == 0) //update data state
                         uiState = uiState.copy(isFetchingNotes = false) //update loading state
                         fetchJob = null
                     } catch (ioe: IOException) {
@@ -53,10 +58,11 @@ class NotesViewModel @Inject constructor(
             }
             false -> {
                 uiState = uiState.copy(isFetchingNotes = false)
-                Log.d(TAG, "fetchNotes()::job is working")
+                Log.d(TAG, "getNoteTotalCount()::job is working")
             }
         }
     }
+
     private fun fetchNotes() {
         when (fetchJob == null) {
             true -> {

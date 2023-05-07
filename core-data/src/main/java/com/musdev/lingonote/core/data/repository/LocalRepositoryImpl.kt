@@ -15,6 +15,10 @@ class LocalRepositoryImpl @Inject constructor(
         return dbNoteDao.getAllNotes()
     }
 
+    override suspend fun fetchNotes(limit: Int, offset: Int): List<Note> {
+        return dbNoteDao.getNotes(limit, offset)
+    }
+
     override suspend fun postNote(note: Note): Boolean {
         dbNoteDao.insertNote(note)
         return true

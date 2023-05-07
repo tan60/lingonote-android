@@ -30,6 +30,25 @@ class NoteUseCase @Inject constructor(
         return noteEntities
     }
 
+    suspend fun fetchNotes(limit: Int, offset: Int): MutableList<NoteEntity> {
+        val notes = localRepository.fetchNotes(limit = limit, offset = offset)
+
+        var noteEntities: MutableList<NoteEntity> = mutableListOf()
+
+        for (i in notes.indices) {
+            noteEntities.add(NoteEntity().apply {
+                this.postNo = notes[i].id
+                this.topic = notes[i].topic
+                this.content = notes[i].content
+                this.correctedContent = notes[i].correctedContent
+                this.correctedType = notes[i].correctedType
+                this.issueDate = notes[i].issueDate
+            })
+        }
+
+        return noteEntities
+    }
+
     suspend fun fetchLastNote() : NoteEntity {
         val note = localRepository.fetchLastNote()
 
@@ -41,5 +60,9 @@ class NoteUseCase @Inject constructor(
             this.correctedContent = note.correctedContent
             this.correctedType = note.correctedType
         }
+    }
+
+    suspend fun getTotalNoteCount(): Int {
+        return localRepository.fetchTotalPostedCount()
     }
 }

@@ -33,7 +33,7 @@ fun BottomNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (sharedNotesViewModel.uiState.noteItems.isEmpty()) {
+        startDestination = if (sharedNotesViewModel.uiState.isNoteEmpty) {
             BottomBarScreen.Greeting.route
         } else {
             BottomBarScreen.Notes.route
