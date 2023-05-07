@@ -64,6 +64,7 @@ class EditViewModel @Inject constructor(
         uiState = uiState.copy(
             topic = "",
             content = "",
+            isPreviewEnable = false,
             isPostComplete = false,
             isSaveEnable = false,
             isPosting = false)
