@@ -36,4 +36,10 @@ sealed class BottomBarScreen(
         title = "Preview",
         iconId = R.drawable.ic_baseline_close_24
     )
+
+    object Settings: BottomBarScreen(
+        route = "settings",
+        title = "Settings",
+        iconId = R.drawable.ic_baseline_settings_24
+    )
 }

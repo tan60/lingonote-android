@@ -18,6 +18,7 @@ import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.HomeScreen
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.presentation.preview.PreviewViewModel
+import com.musdev.lingonote.presentation.settings.SettingViewModel
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -41,6 +42,9 @@ class HomeActivity : ComponentActivity() {
 
     @Inject
     lateinit var achieveViewModel: AchieveViewModel
+
+    @Inject
+    lateinit var settingViewModel: SettingViewModel
 
     @Inject
     lateinit var editUseCase: EditUseCase
@@ -83,7 +87,8 @@ class HomeActivity : ComponentActivity() {
                         notesViewModel = noteViewModel,
                         editViewModel = editViewModel,
                         previewViewModel = previewViewModel,
-                        achieveViewModel = achieveViewModel
+                        achieveViewModel = achieveViewModel,
+                        settingViewModel = settingViewModel
                     )
                 }
             }

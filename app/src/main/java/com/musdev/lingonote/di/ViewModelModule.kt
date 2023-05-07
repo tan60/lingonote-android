@@ -8,6 +8,7 @@ import com.musdev.lingonote.core.domain.usecases.PreviewUseCase
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.presentation.preview.PreviewViewModel
+import com.musdev.lingonote.presentation.settings.SettingViewModel
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,7 +21,7 @@ object ViewModelModule {
     @Singleton
     @Provides
     fun provideNoteViewModel(noteUseCase: NoteUseCase): NotesViewModel {
-        return NotesViewModel(noteUseCase = noteUseCase)
+        return NotesViewModel(noteUseCase)
     }
 
     @Singleton
@@ -33,5 +34,11 @@ object ViewModelModule {
     @Provides
     fun providePreviewViewModel(previewUseCase: PreviewUseCase): PreviewViewModel {
         return PreviewViewModel(previewUseCase)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSettingViewModel(): SettingViewModel {
+        return SettingViewModel()
     }
 }

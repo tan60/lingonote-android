@@ -34,10 +34,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.AchieveEntity
+import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
+import com.musdev.lingonote.presentation.home.sharedNavHostController
 import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
 import com.musdev.lingonote.presentation.notes.NoteItem
 import com.musdev.lingonote.ui.theme.DarkDisableColor
@@ -81,7 +85,12 @@ fun AchieveScreen(
                         color = MaterialTheme.colorScheme.onPrimary
                     )
                 )
-                IconButton(onClick = { /*TODO*/ }) {
+                IconButton(onClick = {
+                    sharedNavHostController.navigate(BottomBarScreen.Settings.route) {
+                        popUpTo(sharedNavHostController.graph.findStartDestination().id)
+                        launchSingleTop = true
+                    }
+                }) {
                     Icon(
                         modifier = Modifier.size(32.dp),
                         painter = painterResource(R.drawable.ic_baseline_settings_24),
@@ -90,13 +99,18 @@ fun AchieveScreen(
                     )
                 }
             }
+            val noteString = if (viewModel.uiState.totalNotesCount > 1) "notes" else "note"
+            val dayString = if (viewModel.uiState.totalDaysCount > 1) "days" else "day"
             Text(
-                text = "You created ${viewModel.uiState.totalNotesCount} notes\nin ${viewModel.uiState.totalDaysCount} days!",
+                modifier = Modifier.align(Alignment.End),
+                textAlign = TextAlign.Center,
+                text = "\"You created ${viewModel.uiState.totalNotesCount} $noteString in ${viewModel.uiState.totalDaysCount} $dayString\".",
                 style = TextStyle(
-                    fontSize = 28.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Light,
                     fontFamily = pretendard,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    lineHeight = 32.sp,
                 )
             )
             Box(modifier = Modifier.padding(bottom = 48.dp)) {

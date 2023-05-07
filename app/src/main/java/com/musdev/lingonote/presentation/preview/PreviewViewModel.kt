@@ -1,16 +1,15 @@
 package com.musdev.lingonote.presentation.preview
 
-import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.core.content.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.musdev.lingonote.App
 import com.musdev.lingonote.core.domain.entities.AICorrectEntity
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.PreviewUseCase
+import com.musdev.lingonote.shared.SharedPref
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -26,15 +25,6 @@ class PreviewViewModel @Inject constructor(
     private var deleteJob: Job? = null
     private var correctJob: Job? = null
     lateinit var currentNote: NoteEntity
-
-    private var openAIKeyValue = ""
-    private val OpenAIKeyName = "OpenAIKey"
-
-    init {
-         App.sharedPref.getString(OpenAIKeyName, "")?.let {
-            openAIKeyValue = it
-        }
-    }
 
     fun setCurrentNote(noteEntity: NoteEntity, enableDelete: Boolean) {
         this.currentNote = noteEntity
@@ -54,20 +44,23 @@ class PreviewViewModel @Inject constructor(
         uiState = uiState.copy(previewMode = previewMode)
     }
 
-    fun isOpenAIKeyExist(): Boolean {
-        return openAIKeyValue.isNotEmpty()
-    }
-
     fun setOpenAIKey(keyValue: String) {
-        openAIKeyValue = keyValue
         with(App.sharedPref.edit()) {
-            putString(OpenAIKeyName, openAIKeyValue)
+            putString(SharedPref.KEY_OPENAPI, keyValue)
             apply()
         }
     }
 
     fun getOpenAIKey(): String {
-        return openAIKeyValue
+        return App.sharedPref.getString(SharedPref.KEY_OPENAPI, "")?.let {
+            it
+        } ?: ""
+    }
+
+    private fun getCorrectInstruction(): String {
+        return App.sharedPref.getString(SharedPref.KEY_INSTRUCTION, SharedPref.DEFAULT_VALUE_INSTRUCTION)?.let {
+            it
+        } ?: SharedPref.DEFAULT_VALUE_INSTRUCTION
     }
 
     fun correctAI(content: String) {
@@ -75,7 +68,9 @@ class PreviewViewModel @Inject constructor(
             uiState = uiState.copy(correctState = RequestState.REQUEST)
             try {
                 correctJob = viewModelScope.launch(Dispatchers.IO) {
-                    val aiCorrectEntity: AICorrectEntity = previewUseCase.correctAI(content, apiKey = openAIKeyValue)
+                    val aiCorrectEntity: AICorrectEntity = previewUseCase.correctAI(content,
+                        apiKey = getOpenAIKey(),
+                        instruction = getCorrectInstruction())
 
                     when(aiCorrectEntity.isSuccess) {
                         true -> {

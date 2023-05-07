@@ -24,6 +24,7 @@ import com.musdev.lingonote.presentation.home.showSnackBar
 import com.musdev.lingonote.presentation.home.snackHostState
 import com.musdev.lingonote.presentation.notes.NotesScreen
 import com.musdev.lingonote.presentation.preview.PreviewScreen
+import com.musdev.lingonote.presentation.settings.SettingScreen
 
 @Composable
 fun BottomNavGraph(
@@ -66,6 +67,9 @@ fun BottomNavGraph(
         }
         composable(route = BottomBarScreen.Greeting.route) {
             GreetingScreen()
+        }
+        composable(route = BottomBarScreen.Settings.route) {
+            SettingScreen(modifier = modifier)
         }
     }
 }

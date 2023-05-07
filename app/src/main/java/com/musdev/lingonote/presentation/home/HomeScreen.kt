@@ -59,6 +59,7 @@ import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
 import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.presentation.preview.PreviewViewModel
+import com.musdev.lingonote.presentation.settings.SettingViewModel
 import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
@@ -74,6 +75,7 @@ lateinit var sharedNotesViewModel: NotesViewModel
 lateinit var sharedEditViewModel: EditViewModel
 lateinit var sharedPreviewViewModel: PreviewViewModel
 lateinit var sharedAchieveViewModel: AchieveViewModel
+lateinit var sharedSettingViewModel: SettingViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -82,13 +84,15 @@ fun HomeScreen(
     notesViewModel: NotesViewModel,
     editViewModel: EditViewModel,
     previewViewModel: PreviewViewModel,
-    achieveViewModel: AchieveViewModel
+    achieveViewModel: AchieveViewModel,
+    settingViewModel: SettingViewModel
 ) {
 
     sharedNotesViewModel = notesViewModel
     sharedEditViewModel = editViewModel
     sharedPreviewViewModel = previewViewModel
     sharedAchieveViewModel = achieveViewModel
+    sharedSettingViewModel = settingViewModel
 
     sharedNavHostController = rememberNavController()
     snackHostState = remember { SnackbarHostState() }
@@ -150,7 +154,7 @@ fun buildTopBar(navController: NavHostController) {
                     Text(
                         text = "Let's write in English",
                         style = TextStyle(
-                            fontSize = 24.sp,
+                            fontSize = 28.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = pretendard,
                             color = MaterialTheme.colorScheme.onPrimary
@@ -176,6 +180,7 @@ fun buildTopBar(navController: NavHostController) {
                         )
                         {
                             Icon(
+                                modifier = Modifier.size(32.dp),
                                 painter = painterResource(id = R.drawable.ic_baseline_close_24),
                                 contentDescription = "new note",
                                 tint = MaterialTheme.colorScheme.onSecondary
