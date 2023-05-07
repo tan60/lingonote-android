@@ -63,6 +63,7 @@ import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 lateinit var snackHostState: SnackbarHostState
@@ -257,10 +258,15 @@ fun buildEditScreenFloatActionButton(
                         sharedEditViewModel.initUiState()
 
                         showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "New note is created!")
+
+                        coroutineScope.launch(Dispatchers.Main) {
+                            sharedNavHostController.navigate(BottomBarScreen.Notes.route) {
+                                popUpTo(sharedNavHostController.graph.findStartDestination().id)
+                                launchSingleTop = true
+                            }
+                        }
                     }
                 }
-
-                sharedNavHostController.popBackStack()
             }
         }
     ) {

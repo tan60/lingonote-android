@@ -1,7 +1,14 @@
 package com.musdev.lingonote.presentation.home.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -23,15 +30,13 @@ fun BottomNavGraph(
     navController: NavHostController,
     modifier: Modifier
 ) {
-    var destination = if (sharedNotesViewModel.uiState.noteItems.isEmpty()) {
-        BottomBarScreen.Greeting.route
-    } else {
-        BottomBarScreen.Notes.route
-    }
-
     NavHost(
         navController = navController,
-        startDestination = destination
+        startDestination = if (sharedNotesViewModel.uiState.noteItems.isEmpty()) {
+            BottomBarScreen.Greeting.route
+        } else {
+            BottomBarScreen.Notes.route
+        }
     ) {
         composable(route = BottomBarScreen.Notes.route) {
             NotesScreen(modifier = modifier, viewModel = sharedNotesViewModel,

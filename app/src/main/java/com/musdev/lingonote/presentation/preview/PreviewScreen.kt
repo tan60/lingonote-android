@@ -105,7 +105,7 @@ fun PreviewScreen(
                     Text(
                         text = sharedPreviewViewModel.currentNote.topic,
                         style = TextStyle(
-                            fontSize = 28.sp,
+                            fontSize = 24.sp,
                             fontWeight = FontWeight.Normal,
                             fontFamily = pretendard,
                             color = MaterialTheme.colorScheme.onPrimary
@@ -114,16 +114,16 @@ fun PreviewScreen(
                         overflow = TextOverflow.Ellipsis
                     )
 
-                    if (sharedPreviewViewModel.uiState.enableDelete) {
-                        Spacer(modifier = Modifier
-                            .fillMaxWidth()
-                            .height(16.dp))
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            modifier = Modifier.fillMaxWidth()
-                        ) {
-                            Row() {
+                    Spacer(modifier = Modifier
+                        .fillMaxWidth()
+                        .height(16.dp))
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row() {
+                            if (sharedPreviewViewModel.uiState.enableDelete) {
                                 AddPreviewModeItem(previewMode = PreviewMode.ORIGINAL, currentPreviewMode = sharedPreviewViewModel.uiState.previewMode)
                                 Spacer(modifier = Modifier.width(5.dp))
                                 AddPreviewModeItem(
@@ -131,18 +131,20 @@ fun PreviewScreen(
                                     currentPreviewMode = sharedPreviewViewModel.uiState.previewMode
                                 )
                             }
-                            //issue date
-                            Text(
-                                text = sharedPreviewViewModel.currentNote.issueDate,
-                                style = TextStyle(
-                                    fontSize = 16.sp,
-                                    fontFamily = pretendard,
-                                    fontWeight = FontWeight.Light,
-                                    //color = MaterialTheme.colorScheme.onSecondary
-                                )
-                            )
+
                         }
+                        //issue date
+                        Text(
+                            text = if (sharedPreviewViewModel.uiState.enableDelete) sharedPreviewViewModel.currentNote.issueDate else "Preview",
+                            style = TextStyle(
+                                fontSize = 16.sp,
+                                fontFamily = pretendard,
+                                fontWeight = FontWeight.Light,
+                                //color = MaterialTheme.colorScheme.onSecondary
+                            )
+                        )
                     }
+
                     Spacer(modifier = Modifier
                         .fillMaxWidth()
                         .height(16.dp))
@@ -156,7 +158,7 @@ fun PreviewScreen(
                                     .verticalScroll(rememberScrollState()),
                                 text = sharedPreviewViewModel.currentNote.content,
                                 style = TextStyle(
-                                    fontSize = 24.sp,
+                                    fontSize = 21.sp,
                                     fontFamily = pretendard,
                                     fontWeight = FontWeight.Light,
                                     color = MaterialTheme.colorScheme.onPrimary
@@ -224,7 +226,7 @@ fun PreviewScreen(
                                         false -> { //이미 AI 교정 된 내용이 있는 상태
                                             Text(
                                                 modifier = Modifier
-                                                    .padding(bottom = 24.dp)
+                                                    .padding(bottom = 21.dp)
                                                     .verticalScroll(rememberScrollState()),
                                                 text = sharedPreviewViewModel.currentNote.correctedContent,
                                                 style = TextStyle(

@@ -51,7 +51,7 @@ class AchieveViewModel @Inject constructor(
                             val diffInMillis = currentDate.time - inputDate.time
                             val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis)
 
-                            uiState = uiState.copy(totalDaysCount = diffInDays.toInt())
+                            uiState = uiState.copy(totalDaysCount = diffInDays.toInt() + 1)
                             uiState = uiState.copy(totalNotesCount = items.size)
 
                             var calendarItems: MutableMap<String, AchieveEntity?> = mutableMapOf()
