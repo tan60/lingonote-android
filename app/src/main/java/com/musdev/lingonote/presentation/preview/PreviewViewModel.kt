@@ -75,6 +75,8 @@ class PreviewViewModel @Inject constructor(
                     when(aiCorrectEntity.isSuccess) {
                         true -> {
                             currentNote.correctedContent = aiCorrectEntity.correctedContent
+                            previewUseCase.updateNote(currentNote)
+
                             uiState = uiState.copy(correctState = RequestState.DONE)
                             correctJob = null
                         }
