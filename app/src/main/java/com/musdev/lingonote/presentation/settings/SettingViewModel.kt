@@ -15,7 +15,7 @@ class SettingViewModel @Inject constructor(): ViewModel() {
             openAIKeyValue = it
         }
 
-        App.sharedPref.getString(SharedPref.KEY_OPENAPI, SharedPref.DEFAULT_VALUE_INSTRUCTION)?.let {
+        App.sharedPref.getString(SharedPref.KEY_INSTRUCTION, SharedPref.DEFAULT_VALUE_INSTRUCTION)?.let {
             correctInstruction = it
         }
     }

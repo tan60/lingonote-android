@@ -311,7 +311,7 @@ fun DialogForInstruction(
     onDismiss: () -> Unit,
     onConfirm: (String) -> Unit
 ) {
-    var keyText by remember {
+    var instructionText by remember {
         mutableStateOf("")
     }
 
@@ -319,7 +319,7 @@ fun DialogForInstruction(
         mutableStateOf(sharedSettingViewModel.getInstruction())
     }
 
-    keyText = instruction
+    instructionText = instruction
 
     if (showDialog) {
         AlertDialog(
@@ -329,9 +329,9 @@ fun DialogForInstruction(
             textContentColor = MaterialTheme.colorScheme.onTertiary,
             text = {
                 OutlinedTextField(
-                    value = keyText,
+                    value = instructionText,
                     onValueChange = {
-                        keyText = it
+                        instructionText = it
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                     maxLines = 3,
@@ -370,8 +370,8 @@ fun DialogForInstruction(
             },
             confirmButton = {
                 Button(onClick = {
-                    instruction = keyText
-                    onConfirm(keyText)
+                    instruction = instructionText
+                    onConfirm(instructionText)
                 }) {
                     Text("Save")
                 }
