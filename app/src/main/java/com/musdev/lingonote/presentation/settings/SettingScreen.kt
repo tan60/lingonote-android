@@ -253,6 +253,7 @@ fun DialogForAPIKey(
                         keyText = it
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    maxLines = 3,
                     modifier = Modifier
                         .fillMaxWidth(),
                     textStyle = TextStyle(
@@ -333,6 +334,7 @@ fun DialogForInstruction(
                         keyText = it
                     },
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    maxLines = 3,
                     modifier = Modifier
                         .fillMaxWidth(),
                     textStyle = TextStyle(
