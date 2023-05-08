@@ -226,11 +226,11 @@ fun PreviewScreen(
                                         false -> { //이미 AI 교정 된 내용이 있는 상태
                                             Text(
                                                 modifier = Modifier
-                                                    .padding(bottom = 21.dp)
+                                                    .padding(bottom = 24.dp)
                                                     .verticalScroll(rememberScrollState()),
                                                 text = sharedPreviewViewModel.currentNote.correctedContent,
                                                 style = TextStyle(
-                                                    fontSize = 24.sp,
+                                                    fontSize = 21.sp,
                                                     fontFamily = pretendard,
                                                     fontWeight = FontWeight.Light,
                                                     color = MaterialTheme.colorScheme.onPrimary
