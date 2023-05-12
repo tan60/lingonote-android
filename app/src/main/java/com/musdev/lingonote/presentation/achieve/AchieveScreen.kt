@@ -138,7 +138,7 @@ fun buildAchieveItem(item: Pair<String, AchieveEntity?>) {
 
     item.second?.let {
         if (it is AchieveEntity) {
-            color = Color(0x57C5B6).copy(alpha = it.postedCount * 0.333f)
+            color = Color(0x57C5B6).copy(alpha = (if (it.postedCount > 3) 3 else it.postedCount) * 0.3333f)
             text = it.date
         }
     }

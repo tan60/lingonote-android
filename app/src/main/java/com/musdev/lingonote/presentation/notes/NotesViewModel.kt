@@ -13,7 +13,9 @@ import javax.inject.Inject
 import androidx.compose.runtime.setValue
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
+import androidx.paging.PagingSource
 import androidx.paging.cachedIn
+import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.presentation.TAG
 import kotlinx.coroutines.Dispatchers
 
@@ -28,16 +30,24 @@ class NotesViewModel @Inject constructor(
         private set
 
     private var fetchJob: Job? = null
-    private var shouldUpdate: Boolean = false
+    private var pagingSource: PagingSource<Int, NoteEntity>? = null
 
     var notePager = Pager(PagingConfig(pageSize = NotesPagingSource.LIMIT) ) {
-        NotesPagingSource(noteUseCase)
+        NotesPagingSource(this, noteUseCase).apply { pagingSource = this }
     }.flow.cachedIn(viewModelScope)
 
     fun fetchNotesAtFirst() {
         if (uiState.noteItems.isEmpty()) {
             fetchNotes()
         }
+    }
+
+    fun initShouldUpdateState() {
+        uiState = uiState.copy(shouldUpdate = false)
+    }
+
+    fun getShouldUpdateState(): Boolean {
+        return uiState.shouldUpdate
     }
 
     fun getNoteTotalCount() {
@@ -87,9 +97,9 @@ class NotesViewModel @Inject constructor(
     }
 
     fun shouldUpdate(shouldUpdate: Boolean) {
-        this.shouldUpdate = shouldUpdate
+        uiState = uiState.copy(shouldUpdate = shouldUpdate)
         uiState.noteItems.clear()
-        //fetchNotesAtFirst()
+        pagingSource?.invalidate()
     }
 }
 
