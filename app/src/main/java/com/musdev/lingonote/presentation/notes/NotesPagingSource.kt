@@ -9,17 +9,20 @@ import com.musdev.lingonote.presentation.TAG
 import java.io.IOException
 
 class NotesPagingSource (
+    private val viewModel: NotesViewModel,
     private val noteUseCase: NoteUseCase
 ): PagingSource<Int, NoteEntity>() {
     companion object {
         private const val STARTING_PAGING_INDEX = 0
         const val LIMIT = 10
     }
+
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, NoteEntity> {
         try {
-            val position = params.key?: STARTING_PAGING_INDEX
+            val position = if (viewModel.getShouldUpdateState()) STARTING_PAGING_INDEX else params.key?: STARTING_PAGING_INDEX
             val notes = noteUseCase.fetchNotes(limit = LIMIT, offset = position)
 
+            viewModel.initShouldUpdateState()
             Log.d(TAG, "load offset = $position ")
             return if (notes != emptyList<NoteEntity>()) {
                 LoadResult.Page(
