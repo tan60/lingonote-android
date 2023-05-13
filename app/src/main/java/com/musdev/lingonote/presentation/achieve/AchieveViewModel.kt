@@ -45,6 +45,7 @@ class AchieveViewModel @Inject constructor(
                         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
 
                         if (items.isNotEmpty()) {
+                            //노트 처음 작성한 날짜와 현재 날짜 비교로 일수 구하기
                             val inputDate = inputDateFormat.parse(items[0].date)
                             val currentDate = Date()
 
@@ -52,7 +53,7 @@ class AchieveViewModel @Inject constructor(
                             val diffInDays = TimeUnit.MILLISECONDS.toDays(diffInMillis)
 
                             uiState = uiState.copy(totalDaysCount = diffInDays.toInt() + 1)
-                            uiState = uiState.copy(totalNotesCount = items.size)
+                            //uiState = uiState.copy(totalNotesCount = items.size)
 
                             var calendarItems: MutableMap<String, AchieveEntity?> = mutableMapOf()
                             val calendar = Calendar.getInstance()
@@ -69,6 +70,9 @@ class AchieveViewModel @Inject constructor(
                             uiState = uiState.copy(isFetchingAchieves = false) //update loading state
                             fetchJob = null
                         }
+
+                        val totalCount = achieveUseCase.getTotalNoteCount()
+                        uiState = uiState.copy(totalNotesCount = totalCount)
 
                     } catch (ioe: IOException) {
                         uiState = uiState.copy(isFetchingAchieves = false) //update loading state

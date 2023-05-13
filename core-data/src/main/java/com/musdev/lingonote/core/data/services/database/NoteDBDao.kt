@@ -38,6 +38,9 @@ interface NoteDBDao {
     @Update
     suspend fun upsertNote(note: Note)
 
+    @Query("UPDATE note_table SET topic = :topic, content = :content, corrected_content = :correctContent, fixed_date_time = :fixDateTime, corrected_type = :correctedType WHERE id = :noteId")
+    suspend fun updateNote(topic: String, content: String, correctContent: String, fixDateTime: String, correctedType: String, noteId: Int)
+
     @Delete
     fun deleteNote(noteEntity: Note)
 

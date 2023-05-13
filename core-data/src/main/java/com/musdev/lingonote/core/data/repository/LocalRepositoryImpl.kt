@@ -25,7 +25,16 @@ class LocalRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateNote(note: Note): Boolean {
-        dbNoteDao.upsertNote(note)
+        dbNoteDao.updateNote(
+            topic = note.topic,
+            content = note.content,
+            correctContent = note.correctedContent,
+            correctedType = note.correctedType,
+            fixDateTime = note.fixedDateTime,
+            noteId = note.id
+        )
+
+        //dbNoteDao.upsertNote(note)
         return true
     }
 
