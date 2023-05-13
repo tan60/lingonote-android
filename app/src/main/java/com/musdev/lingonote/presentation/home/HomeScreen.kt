@@ -260,6 +260,7 @@ fun buildEditScreenFloatActionButton(
                 coroutineScope.launch {
                     sharedEditViewModel.postNewNote { result ->
                         sharedNotesViewModel.shouldUpdate(result)
+                        sharedAchieveViewModel.shouldUpdate(result)
                         sharedEditViewModel.initUiState()
 
                         showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "New note is created!")

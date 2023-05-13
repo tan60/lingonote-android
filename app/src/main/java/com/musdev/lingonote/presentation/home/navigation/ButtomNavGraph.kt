@@ -60,6 +60,7 @@ fun BottomNavGraph(
                 },
                 onRemoveNoteClick = {
                     sharedNotesViewModel.shouldUpdate(true)
+                    sharedAchieveViewModel.shouldUpdate(true)
                     showSnackBar(snackHostState = snackHostState, coroutineScope = coroutineScope, "Remove Note!")
                     navController.popBackStack()
                 }
