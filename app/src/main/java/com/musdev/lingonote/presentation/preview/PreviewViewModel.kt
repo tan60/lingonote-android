@@ -8,7 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.musdev.lingonote.App
 import com.musdev.lingonote.core.domain.entities.AICorrectEntity
 import com.musdev.lingonote.core.domain.entities.NoteEntity
-import com.musdev.lingonote.core.domain.usecases.PreviewUseCase
+import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
+import com.musdev.lingonote.core.domain.usecases.DeleteNoteUseCase
+import com.musdev.lingonote.core.domain.usecases.UpdateNoteUseCase
 import com.musdev.lingonote.shared.SharedPref
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -16,7 +18,9 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class PreviewViewModel @Inject constructor(
-    private val previewUseCase: PreviewUseCase
+    private val correctContentUseCase: CorrectContentUseCase,
+    private val deleteNoteUseCase: DeleteNoteUseCase,
+    private val updateNoteUseCase: UpdateNoteUseCase
 ): ViewModel() {
 
     var uiState by mutableStateOf(PreviewUiState())
@@ -68,14 +72,14 @@ class PreviewViewModel @Inject constructor(
             uiState = uiState.copy(correctState = RequestState.REQUEST)
             try {
                 correctJob = viewModelScope.launch(Dispatchers.IO) {
-                    val aiCorrectEntity: AICorrectEntity = previewUseCase.correctAI(content,
+                    val aiCorrectEntity: AICorrectEntity = correctContentUseCase.invoke(content,
                         apiKey = getOpenAIKey(),
                         instruction = getCorrectInstruction())
 
                     when(aiCorrectEntity.isSuccess) {
                         true -> {
                             currentNote.correctedContent = aiCorrectEntity.correctedContent
-                            previewUseCase.updateNote(currentNote)
+                            updateNoteUseCase.invoke(currentNote)
 
                             uiState = uiState.copy(correctState = RequestState.DONE)
                             correctJob = null
@@ -106,7 +110,7 @@ class PreviewViewModel @Inject constructor(
             uiState = uiState.copy(deleteState = RequestState.REQUEST)
             deleteJob = viewModelScope.launch(Dispatchers.IO) {
                 try {
-                    uiState = when(previewUseCase.deleteNote(currentNote.postNo)) {
+                    uiState = when(deleteNoteUseCase.invoke(currentNote.postNo)) {
                         true -> {
                             uiState.copy(deleteState = RequestState.DONE)
                         }

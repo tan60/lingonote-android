@@ -8,10 +8,10 @@ import org.joda.time.format.DateTimeFormat
 import java.util.Locale
 import javax.inject.Inject
 
-class EditUseCase @Inject constructor(
+class PostNoteUseCase @Inject constructor(
     private val localRepository: LocalRepository
 ) {
-    suspend fun postNote(noteEntity: NoteEntity): Boolean {
+    suspend fun invoke(noteEntity: NoteEntity): Boolean {
         val ldt = LocalDateTime()
 
         val formatDate = DateTimeFormat.forPattern("yyyy-MM-dd").withLocale(Locale.KOREA)

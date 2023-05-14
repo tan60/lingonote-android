@@ -11,8 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.musdev.lingonote.core.domain.entities.NoteEntity
-import com.musdev.lingonote.core.domain.usecases.EditUseCase
-import com.musdev.lingonote.core.domain.usecases.NoteUseCase
+import com.musdev.lingonote.core.domain.usecases.PostNoteUseCase
 import com.musdev.lingonote.presentation.achieve.AchieveViewModel
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.HomeScreen
@@ -21,11 +20,7 @@ import com.musdev.lingonote.presentation.preview.PreviewViewModel
 import com.musdev.lingonote.presentation.settings.SettingViewModel
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
 import javax.inject.Inject
 
 const val TAG = "AppDebug"
@@ -47,7 +42,7 @@ class HomeActivity : ComponentActivity() {
     lateinit var settingViewModel: SettingViewModel
 
     @Inject
-    lateinit var editUseCase: EditUseCase
+    lateinit var postNoteUseCase: PostNoteUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,7 +105,7 @@ class HomeActivity : ComponentActivity() {
             this.issueDate = issueDate
         }
 
-        editUseCase.postNote(noteEntity)
+        postNoteUseCase.invoke(noteEntity)
     }
 
     /*private suspend fun correctContentTest(content: String) {

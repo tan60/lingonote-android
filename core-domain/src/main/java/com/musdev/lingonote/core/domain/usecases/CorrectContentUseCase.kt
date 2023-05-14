@@ -8,15 +8,10 @@ import com.musdev.lingonote.core.domain.translator.GPTResponseModelTranslator
 import com.musdev.lingonote.core.domain.translator.asDomain
 import javax.inject.Inject
 
-/**
- * 이름 규칙
- * 동사 + 명사/대상(선택사항) + UseCase
- */
 class CorrectContentUseCase @Inject constructor (
-    private val repository: RemoteRepository
+    private val remoteRepository: RemoteRepository
 ) {
-    suspend fun correctMyContent(content: String): AICorrectEntity {
-
+    suspend fun invoke(content: String, apiKey: String, instruction: String): AICorrectEntity {
         /**
          * openAI Edit
          * POST : https://api.openai.com/v1/edits
@@ -25,15 +20,13 @@ class CorrectContentUseCase @Inject constructor (
 
         val apiUrl = "https://api.openai.com/v1/edits"
 
-        val apiKey = "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"//invalid key for test
-
         var requestModel = GPTRequestModel().apply {
             this.model = "text-davinci-edit-001"
-            this.instruction = "correct and improve only grammar."
+            this.instruction = instruction
             this.input = content
         }
 
-        repository.queryGPTEdit(apiUrl, apiKey, requestModel).asDomain(GPTResponseModelTranslator).let {
+        remoteRepository.queryGPTEdit(apiUrl, apiKey, requestModel).asDomain(GPTResponseModelTranslator).let {
             when (it) {
                 is DataResponse.Success<AICorrectEntity> -> {
                     return it.data

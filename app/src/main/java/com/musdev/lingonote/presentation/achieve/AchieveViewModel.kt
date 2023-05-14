@@ -7,7 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.musdev.lingonote.core.domain.entities.AchieveEntity
-import com.musdev.lingonote.core.domain.usecases.AchieveUseCase
+import com.musdev.lingonote.core.domain.usecases.GetContributionUseCase
+import com.musdev.lingonote.core.domain.usecases.GetTotalNoteCountUseCase
 import com.musdev.lingonote.presentation.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -21,7 +22,8 @@ import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class AchieveViewModel @Inject constructor(
-    private val achieveUseCase: AchieveUseCase
+    private val getContributionUseCase: GetContributionUseCase,
+    private val getTotalNoteCountUseCase: GetTotalNoteCountUseCase
 ): ViewModel() {
     var uiState by mutableStateOf(AchieveUiState())
         private set
@@ -41,7 +43,7 @@ class AchieveViewModel @Inject constructor(
                 uiState = uiState.copy(isFetchingAchieves = true)
                 fetchJob = viewModelScope.launch(Dispatchers.IO) {
                     try {
-                        val items = achieveUseCase.fetchAchieves() //fetch data
+                        val items = getContributionUseCase.invoke() //fetch data
                         val inputDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.KOREA)
 
                         if (items.isNotEmpty()) {
@@ -71,7 +73,7 @@ class AchieveViewModel @Inject constructor(
                             fetchJob = null
                         }
 
-                        val totalCount = achieveUseCase.getTotalNoteCount()
+                        val totalCount = getTotalNoteCountUseCase.invoke()
                         uiState = uiState.copy(totalNotesCount = totalCount)
 
                     } catch (ioe: IOException) {

@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.musdev.lingonote.core.domain.entities.NoteEntity
-import com.musdev.lingonote.core.domain.usecases.EditUseCase
+import com.musdev.lingonote.core.domain.usecases.PostNoteUseCase
 import com.musdev.lingonote.presentation.TAG
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class EditViewModel @Inject constructor(
-    private val editUseCase: EditUseCase
+    private val postNoteUseCase: PostNoteUseCase
 ): ViewModel() {
 
     var uiState by mutableStateOf(EditUiState())
@@ -29,7 +29,7 @@ class EditViewModel @Inject constructor(
                 uiState = uiState.copy(isPosting = true)
                 postJob = viewModelScope.launch(Dispatchers.IO) {
                     try {
-                        val result = editUseCase.postNote(buildNote(uiState.topic, uiState.content))
+                        val result = postNoteUseCase.invoke(buildNote(uiState.topic, uiState.content))
                         uiState.copy(isPosting = false)
                         uiState.copy(isPostComplete = true)
                         postJob = null

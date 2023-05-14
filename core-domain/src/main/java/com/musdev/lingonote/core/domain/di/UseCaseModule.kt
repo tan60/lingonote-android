@@ -2,11 +2,13 @@ package com.musdev.lingonote.core.domain.di
 
 import com.musdev.lingonote.core.data.repository.LocalRepository
 import com.musdev.lingonote.core.data.repository.RemoteRepository
-import com.musdev.lingonote.core.domain.usecases.AchieveUseCase
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
-import com.musdev.lingonote.core.domain.usecases.EditUseCase
-import com.musdev.lingonote.core.domain.usecases.NoteUseCase
-import com.musdev.lingonote.core.domain.usecases.PreviewUseCase
+import com.musdev.lingonote.core.domain.usecases.DeleteNoteUseCase
+import com.musdev.lingonote.core.domain.usecases.FetchNotesUseCase
+import com.musdev.lingonote.core.domain.usecases.GetContributionUseCase
+import com.musdev.lingonote.core.domain.usecases.GetTotalNoteCountUseCase
+import com.musdev.lingonote.core.domain.usecases.PostNoteUseCase
+import com.musdev.lingonote.core.domain.usecases.UpdateNoteUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,31 +20,43 @@ import javax.inject.Singleton
 object UseCaseModule {
     @Singleton
     @Provides
-    fun provideAiCorrectUseCase(repository: RemoteRepository): CorrectContentUseCase {
+    fun provideCorrectContentUseCase(repository: RemoteRepository): CorrectContentUseCase {
         return CorrectContentUseCase(repository)
     }
 
     @Singleton
     @Provides
-    fun provideNoteUseCase(repository: LocalRepository): NoteUseCase {
-        return NoteUseCase(repository)
+    fun provideGetContributionUseCase(localRepository: LocalRepository): GetContributionUseCase {
+        return GetContributionUseCase(localRepository)
     }
 
     @Singleton
     @Provides
-    fun provideEditUseCase(repository: LocalRepository): EditUseCase {
-        return EditUseCase(repository)
-    }
-    @Singleton
-    @Provides
-    fun providePreviewUseCase(localRepository: LocalRepository,
-                              remoteRepository: RemoteRepository): PreviewUseCase {
-        return PreviewUseCase(localRepository, remoteRepository)
+    fun provideGetTotalNoteCountUseCase(localRepository: LocalRepository): GetTotalNoteCountUseCase {
+        return GetTotalNoteCountUseCase(localRepository)
     }
 
     @Singleton
     @Provides
-    fun provideAchieveUseCase(localRepository: LocalRepository): AchieveUseCase {
-        return AchieveUseCase(localRepository)
+    fun providePostNoteUseCase(localRepository: LocalRepository): PostNoteUseCase {
+        return PostNoteUseCase(localRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideFetchNotesUseCase(localRepository: LocalRepository): FetchNotesUseCase {
+        return FetchNotesUseCase(localRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteNoteUseCase(localRepository: LocalRepository): DeleteNoteUseCase {
+        return DeleteNoteUseCase(localRepository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideUpdateNoteUseCase(localRepository: LocalRepository): UpdateNoteUseCase {
+        return UpdateNoteUseCase(localRepository)
     }
 }

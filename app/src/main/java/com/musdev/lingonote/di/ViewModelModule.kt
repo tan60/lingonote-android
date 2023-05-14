@@ -1,10 +1,11 @@
 package com.musdev.lingonote.di
 
-import android.content.Context
-import com.musdev.lingonote.App
-import com.musdev.lingonote.core.domain.usecases.EditUseCase
-import com.musdev.lingonote.core.domain.usecases.NoteUseCase
-import com.musdev.lingonote.core.domain.usecases.PreviewUseCase
+import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
+import com.musdev.lingonote.core.domain.usecases.DeleteNoteUseCase
+import com.musdev.lingonote.core.domain.usecases.FetchNotesUseCase
+import com.musdev.lingonote.core.domain.usecases.GetTotalNoteCountUseCase
+import com.musdev.lingonote.core.domain.usecases.PostNoteUseCase
+import com.musdev.lingonote.core.domain.usecases.UpdateNoteUseCase
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.presentation.preview.PreviewViewModel
@@ -20,20 +21,20 @@ import javax.inject.Singleton
 object ViewModelModule {
     @Singleton
     @Provides
-    fun provideNoteViewModel(noteUseCase: NoteUseCase): NotesViewModel {
-        return NotesViewModel(noteUseCase)
+    fun provideNoteViewModel(fetchNoteUseCase: FetchNotesUseCase, getTotalNoteCountUseCase: GetTotalNoteCountUseCase): NotesViewModel {
+        return NotesViewModel(fetchNoteUseCase, getTotalNoteCountUseCase)
     }
 
     @Singleton
     @Provides
-    fun provideEditViewModel(editUseCase: EditUseCase): EditViewModel {
-        return EditViewModel(editUseCase)
+    fun provideEditViewModel(postNoteUseCase: PostNoteUseCase): EditViewModel {
+        return EditViewModel(postNoteUseCase)
     }
 
     @Singleton
     @Provides
-    fun providePreviewViewModel(previewUseCase: PreviewUseCase): PreviewViewModel {
-        return PreviewViewModel(previewUseCase)
+    fun providePreviewViewModel(correctContentUseCase: CorrectContentUseCase, deleteNoteUseCase: DeleteNoteUseCase, updateNoteUseCase: UpdateNoteUseCase): PreviewViewModel {
+        return PreviewViewModel(correctContentUseCase, deleteNoteUseCase, updateNoteUseCase)
     }
 
     @Singleton
