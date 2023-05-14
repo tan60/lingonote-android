@@ -70,6 +70,9 @@ dependencies {
     implementation(platform("com.google.firebase:firebase-bom:32.0.0"))
     implementation("com.google.firebase:firebase-analytics-ktx")
 
+    //admob
+    implementation(libs.play.services.ads)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.paging.compose)

@@ -1,5 +1,6 @@
 package com.musdev.lingonote.di
 
+import android.content.Context
 import com.musdev.lingonote.core.domain.usecases.CorrectContentUseCase
 import com.musdev.lingonote.core.domain.usecases.DeleteNoteUseCase
 import com.musdev.lingonote.core.domain.usecases.FetchNotesUseCase
@@ -21,8 +22,8 @@ import javax.inject.Singleton
 object ViewModelModule {
     @Singleton
     @Provides
-    fun provideNoteViewModel(fetchNoteUseCase: FetchNotesUseCase, getTotalNoteCountUseCase: GetTotalNoteCountUseCase): NotesViewModel {
-        return NotesViewModel(fetchNoteUseCase, getTotalNoteCountUseCase)
+    fun provideNoteViewModel(context: Context, fetchNoteUseCase: FetchNotesUseCase, getTotalNoteCountUseCase: GetTotalNoteCountUseCase): NotesViewModel {
+        return NotesViewModel(context, fetchNoteUseCase, getTotalNoteCountUseCase)
     }
 
     @Singleton

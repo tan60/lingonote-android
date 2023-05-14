@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -33,10 +32,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -47,36 +44,37 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
 import com.musdev.lingonote.R
 import com.musdev.lingonote.core.domain.entities.NoteEntity
+import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
+import com.musdev.lingonote.presentation.home.sharedNavHostController
 import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
 import com.musdev.lingonote.ui.theme.DarkDisableColor
 import com.musdev.lingonote.ui.theme.LightDisableColor
 import com.musdev.lingonote.ui.theme.pretendard
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PreviewScreen(
     modifier: Modifier,
     onCloseClick: () -> Unit,
     onRemoveNoteClick: (noteEntity: NoteEntity) -> Unit
 ) {
-    var keyText by remember {
-        mutableStateOf(TextFieldValue(""))
-    }
-
     var openAIKey by remember {
         mutableStateOf(sharedPreviewViewModel.getOpenAIKey())
     }
 
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
@@ -84,7 +82,8 @@ fun PreviewScreen(
         Card(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 16.dp, bottom = 16.dp),
+                .padding(top = 16.dp, bottom = 66.dp)
+                .align(Alignment.TopStart),
             shape = CardDefaults.shape,
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.primary
@@ -245,61 +244,32 @@ fun PreviewScreen(
                                         modifier.fillMaxWidth()
                                     ) {
                                         Spacer(modifier = Modifier.height(8.dp))
-                                        OutlinedTextField(
-                                            value = keyText,
-                                            onValueChange = {
-                                                keyText = it
-                                            },
-                                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                                            modifier = Modifier
-                                                .fillMaxWidth(),
-                                            textStyle = TextStyle(
-                                                fontSize = 18.sp,
-                                                fontFamily = pretendard
-                                            ),
-                                            label = {
-                                                Text(
-                                                    text = "OpenAI Key",
-                                                    style = TextStyle(
-                                                        fontSize = 18.sp,
-                                                        fontFamily = pretendard
-                                                    )
-                                                )
-                                            },
-                                            placeholder = {
-                                                Text(
-                                                    text = "Please enter your OpenAI key",
-                                                    style = TextStyle(
-                                                        fontSize = 18.sp,
-                                                        fontFamily = pretendard
-                                                    )
-                                                )
-                                            },
-                                            singleLine = false,
-                                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                                cursorColor = MaterialTheme.colorScheme.secondary,
-                                                containerColor = MaterialTheme.colorScheme.background,
-                                                focusedLabelColor = MaterialTheme.colorScheme.onSecondary,
-                                                focusedBorderColor = MaterialTheme.colorScheme.onSecondary
+                                        Text(
+                                            text = "To use AI Improve, registration of an OpenAI key is required before use.",
+                                            style = TextStyle(
+                                                fontSize = 21.sp,
+                                                fontWeight = FontWeight.Normal,
+                                                fontFamily = pretendard,
+                                                color = MaterialTheme.colorScheme.error
                                             )
                                         )
                                         Spacer(modifier = Modifier.height(4.dp))
                                         Button(
                                             onClick = {
-                                                if (keyText.text.isNotEmpty()) {
-                                                    openAIKey = keyText.text
-                                                    sharedPreviewViewModel.setOpenAIKey(keyText.text)
+                                                sharedNavHostController.navigate(BottomBarScreen.Settings.route) {
+                                                    restoreState = true
                                                 }
+                                                sharedPreviewViewModel.setPreviewMode(previewMode = PreviewMode.ORIGINAL)
                                             },
                                             modifier = Modifier
                                                 .wrapContentSize()
                                                 .align(Alignment.End),
                                             colors = ButtonDefaults.buttonColors(
-                                                containerColor = if (keyText.text.isNotEmpty()) MaterialTheme.colorScheme.secondary else MaterialTheme.colorScheme.tertiary,
-                                                contentColor = if (keyText.text.isNotEmpty()) MaterialTheme.colorScheme.onSecondary else MaterialTheme.colorScheme.onTertiary,
+                                                containerColor = MaterialTheme.colorScheme.secondary,
+                                                contentColor = MaterialTheme.colorScheme.onSecondary,
                                             )
                                         ) {
-                                            Text("Register", style = TextStyle(fontSize = 14.sp))
+                                            Text("Go to Settings", style = TextStyle(fontSize = 14.sp))
                                         }
                                     }
                                 }
@@ -372,6 +342,12 @@ fun PreviewScreen(
                 }
             }
         }
+        Box(modifier = Modifier
+            .align(Alignment.BottomStart)
+            .fillMaxWidth()
+            .height(50.dp)) {
+            BuildAdView()
+        }
     }
 }
 
@@ -398,7 +374,8 @@ fun RowScope.AddPreviewModeItem(
                 sharedPreviewViewModel.setPreviewMode(previewMode = previewMode)
 
                 if (previewMode == PreviewMode.CORRECTED
-                    && sharedPreviewViewModel.currentNote.correctedContent.isEmpty()) {
+                    && sharedPreviewViewModel.currentNote.correctedContent.isEmpty()
+                ) {
                     sharedPreviewViewModel.correctAI(sharedPreviewViewModel.currentNote.content)
                 }
             })
@@ -431,4 +408,24 @@ fun RowScope.AddPreviewModeItem(
             }
         }
     }
+}
+
+@Composable
+fun BuildAdView() {
+    val adId = stringResource(id = R.string.sample_banner_id)
+    val adRequest = AdRequest.Builder().build()
+
+    AndroidView(
+        modifier = Modifier.fillMaxSize(),
+        factory = {
+            AdView(it).apply {
+                setAdSize(AdSize.BANNER)
+                adUnitId = adId
+                loadAd(adRequest)
+            }
+        },
+        update = {
+            it.loadAd(adRequest)
+        }
+    )
 }

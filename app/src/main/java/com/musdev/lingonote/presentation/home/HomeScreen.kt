@@ -34,8 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -53,6 +55,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.musdev.lingonote.R
+import com.musdev.lingonote.presentation.TAG
 import com.musdev.lingonote.presentation.achieve.AchieveViewModel
 import com.musdev.lingonote.presentation.edit.EditViewModel
 import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
@@ -98,6 +101,12 @@ fun HomeScreen(
     snackHostState = remember { SnackbarHostState() }
     coroutineScope = rememberCoroutineScope()
 
+    var currentRoute: String? by remember {
+        mutableStateOf("")
+    }
+
+    currentRoute = getCurrentRoute(navController = sharedNavHostController)
+
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackHostState)
@@ -106,14 +115,24 @@ fun HomeScreen(
             buildTopBar(navController = sharedNavHostController)
         },
         floatingActionButton = {
-            Row() {
-                when (getCurrentRoute(navController = sharedNavHostController)) {
-                    BottomBarScreen.Notes.route, BottomBarScreen.Greeting.route -> {
-                        buildNotesScreenActionButton(navController = sharedNavHostController)
-                    }
-                    BottomBarScreen.Edit.route -> {
-                        buildEditScreenFloatActionButton()
-                    }
+            when (currentRoute) {
+                BottomBarScreen.Notes.route -> {
+                    buildNewNoteActionButton(navController = sharedNavHostController)
+                }
+                BottomBarScreen.Greeting.route -> {
+                    buildNewNoteActionButton(navController = sharedNavHostController)
+                }
+                BottomBarScreen.Edit.route -> {
+                    buildEditActionButton()
+                }
+                BottomBarScreen.Achieve.route -> {
+
+                }
+                BottomBarScreen.Settings.route -> {
+
+                }
+                BottomBarScreen.Preview.route -> {
+
                 }
             }
         },
@@ -194,7 +213,7 @@ fun buildTopBar(navController: NavHostController) {
 }
 
 @Composable
-fun buildNotesScreenActionButton(navController: NavHostController) {
+fun buildNewNoteActionButton(navController: NavHostController) {
     FloatingActionButton(
         containerColor = MaterialTheme.colorScheme.secondary,
         onClick = {
@@ -222,7 +241,7 @@ fun buildNotesScreenActionButton(navController: NavHostController) {
 }
 
 @Composable
-fun buildEditScreenFloatActionButton(
+fun buildEditActionButton(
 ) {
     FloatingActionButton(
         containerColor = if (sharedEditViewModel.uiState.isPreviewEnable)

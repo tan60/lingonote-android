@@ -10,6 +10,8 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.google.android.gms.ads.MobileAds
+import com.musdev.lingonote.App
 import com.musdev.lingonote.core.domain.entities.NoteEntity
 import com.musdev.lingonote.core.domain.usecases.PostNoteUseCase
 import com.musdev.lingonote.presentation.achieve.AchieveViewModel
@@ -18,6 +20,7 @@ import com.musdev.lingonote.presentation.home.HomeScreen
 import com.musdev.lingonote.presentation.notes.NotesViewModel
 import com.musdev.lingonote.presentation.preview.PreviewViewModel
 import com.musdev.lingonote.presentation.settings.SettingViewModel
+import com.musdev.lingonote.shared.SharedPref
 import com.musdev.lingonote.ui.theme.LingoNoteTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -73,6 +76,9 @@ class HomeActivity : ComponentActivity() {
             }
         }*/
 
+        MobileAds.initialize(this) { status ->
+            //App.sharedPref.edit().putString(SharedPref.KEY_ADS_INIT_STATUS, status.toString())
+        }
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 noteViewModel.getNoteTotalCount()
