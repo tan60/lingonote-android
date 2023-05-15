@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.musdev.lingonote.core.domain"
+    namespace = "com.musdev.papanote.core.domain"
     compileSdk = Configurations.compileSdk
 
     defaultConfig {

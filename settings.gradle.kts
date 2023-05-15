@@ -14,7 +14,7 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "LingoNote"
+rootProject.name = "PapaNote"
 include(":app")
 include(":core-data")
 include(":core-domain")

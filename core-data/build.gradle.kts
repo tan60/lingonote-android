@@ -9,7 +9,7 @@ plugins {
 }
 
 android {
-    namespace = "com.musdev.lingonote.core.data"
+    namespace = "com.musdev.papanote.core.data"
     compileSdk = Configurations.compileSdk
 
     defaultConfig {

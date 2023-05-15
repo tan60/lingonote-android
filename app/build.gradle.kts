@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.musdev.lingonote"
+    namespace = "com.musdev.papanote"
     compileSdk = Configurations.compileSdk
 
     defaultConfig {
-        applicationId = "com.musdev.lingonote"
+        applicationId = "com.musdev.papanote"
         minSdk = Configurations.minSdk
         targetSdk = Configurations.targetSdk
         versionCode = Configurations.versionCode
