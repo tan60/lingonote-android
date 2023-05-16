@@ -1,6 +1,5 @@
 package com.musdev.papanote.presentation.notes
 
-import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,11 +14,10 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingSource
 import androidx.paging.cachedIn
-import com.google.android.gms.ads.AdLoader
-import com.musdev.papanote.core.domain.entities.NoteEntity
-import com.musdev.papanote.core.domain.usecases.FetchNotesUseCase
-import com.musdev.papanote.core.domain.usecases.GetTotalNoteCountUseCase
-import com.musdev.papanote.presentation.TAG
+import com.musdev.lingonote.core.domain.entities.NoteEntity
+import com.musdev.lingonote.core.domain.usecases.FetchNotesUseCase
+import com.musdev.lingonote.core.domain.usecases.GetTotalNoteCountUseCase
+import com.musdev.lingonote.presentation.TAG
 import kotlinx.coroutines.Dispatchers
 
 /**
@@ -27,7 +25,6 @@ import kotlinx.coroutines.Dispatchers
  * UI를 그리기 위한 데이터 혹은 상태 변경에 맞게 UiState만 변경, UI를 직접 접근해서 조작하면 안됨
  */
 class NotesViewModel @Inject constructor(
-    private val context: Context,
     private val fetchNotesUseCase: FetchNotesUseCase,
     private val getTotalNoteCountUseCase: GetTotalNoteCountUseCase
 ) : ViewModel() {
@@ -41,8 +38,6 @@ class NotesViewModel @Inject constructor(
         NotesPagingSource(this, fetchNotesUseCase).apply { pagingSource = this }
     }.flow.cachedIn(viewModelScope)
 
-
-    var adLoader: AdLoader? = null
 
     fun initShouldUpdateState() {
         uiState = uiState.copy(shouldUpdate = false)

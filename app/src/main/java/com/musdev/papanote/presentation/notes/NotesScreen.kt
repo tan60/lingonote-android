@@ -20,6 +20,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposeCompilerApi
+import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
@@ -27,6 +29,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.musdev.papanote.core.domain.entities.NoteEntity
@@ -40,6 +43,10 @@ fun NotesScreen(
     onItemClick: (noteEntity: NoteEntity) -> Unit
 ) {
     onNoteClick = onItemClick
+
+    /*SideEffect {
+        viewModel.fetchNotesAtFirst()
+    }*/
 
     Box(
         modifier = modifier

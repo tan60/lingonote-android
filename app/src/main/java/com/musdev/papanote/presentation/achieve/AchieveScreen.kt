@@ -5,8 +5,8 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
@@ -24,27 +25,29 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import com.google.android.gms.ads.AdRequest
-import com.google.android.gms.ads.AdSize
-import com.google.android.gms.ads.AdView
-import com.musdev.papanote.R
-import com.musdev.papanote.core.domain.entities.AchieveEntity
-import com.musdev.papanote.presentation.home.navigation.BottomBarScreen
-import com.musdev.papanote.presentation.home.sharedNavHostController
-import com.musdev.papanote.ui.theme.DarkDisableColor
-import com.musdev.papanote.ui.theme.LightDisableColor
-import com.musdev.papanote.ui.theme.pretendard
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import com.musdev.lingonote.R
+import com.musdev.lingonote.core.domain.entities.AchieveEntity
+import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
+import com.musdev.lingonote.presentation.home.sharedNavHostController
+import com.musdev.lingonote.presentation.home.sharedPreviewViewModel
+import com.musdev.lingonote.presentation.notes.NoteItem
+import com.musdev.lingonote.ui.theme.DarkDisableColor
+import com.musdev.lingonote.ui.theme.LightDisableColor
+import com.musdev.lingonote.ui.theme.pretendard
+import java.util.Random
 
 @Composable
 fun AchieveScreen(
@@ -61,10 +64,9 @@ fun AchieveScreen(
         scrollState.animateScrollToItem(scrollState.layoutInfo.totalItemsCount)
     })
 
-    Box(modifier = Modifier.padding(start = 32.dp, top = 32.dp, end = 32.dp)) {
+    Box(modifier = Modifier.padding(32.dp)) {
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
@@ -85,7 +87,8 @@ fun AchieveScreen(
                 )
                 IconButton(onClick = {
                     sharedNavHostController.navigate(BottomBarScreen.Settings.route) {
-                        restoreState = true
+                        popUpTo(sharedNavHostController.graph.findStartDestination().id)
+                        launchSingleTop = true
                     }
                 }) {
                     Icon(
@@ -96,22 +99,22 @@ fun AchieveScreen(
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(20.dp))
             val noteString = if (viewModel.uiState.totalNotesCount > 1) "notes" else "note"
             val dayString = if (viewModel.uiState.totalDaysCount > 1) "days" else "day"
-
             Text(
+                modifier = Modifier.align(Alignment.End),
+                textAlign = TextAlign.Center,
                 text = "\"You created ${viewModel.uiState.totalNotesCount} $noteString in ${viewModel.uiState.totalDaysCount} $dayString\".",
                 style = TextStyle(
-                    fontSize = 21.sp,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.Light,
                     fontFamily = pretendard,
-                    color = MaterialTheme.colorScheme.onPrimary
+                    color = MaterialTheme.colorScheme.onPrimary,
+                    lineHeight = 32.sp,
                 )
             )
-            Spacer(modifier = Modifier.height(20.dp))
-            Box(modifier = Modifier.padding(bottom = 0.dp)) {
-                Row(modifier = Modifier.height(334.dp)) {//box height * 7 + 12(padding 2*16)
+            Box(modifier = Modifier.padding(bottom = 48.dp)) {
+                Row(modifier = Modifier.height(336.dp)) {
                     LazyHorizontalGrid(
                         rows = GridCells.Fixed(7),
                         state = scrollState
@@ -122,8 +125,6 @@ fun AchieveScreen(
                     }
                 }
             }
-
-            BuildAdView()
         }
     }
 }
@@ -144,7 +145,7 @@ fun buildAchieveItem(item: Pair<String, AchieveEntity?>) {
 
     Box(
         modifier = Modifier
-            .size(46.dp)
+            .size(48.dp)
             .padding(2.dp),
     ) {
         Box(
@@ -163,24 +164,4 @@ fun buildAchieveItem(item: Pair<String, AchieveEntity?>) {
             Text("$text", style = TextStyle(fontSize = 12.sp))
         }
     }
-}
-
-@Composable
-fun BuildAdView() {
-    val adId = stringResource(id = R.string.sample_banner_id)
-    val adRequest = AdRequest.Builder().build()
-
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = {
-            AdView(it).apply {
-                setAdSize(AdSize.BANNER)
-                adUnitId = adId
-                loadAd(adRequest)
-            }
-        },
-        update = {
-            it.loadAd(adRequest)
-        }
-    )
 }

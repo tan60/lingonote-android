@@ -28,10 +28,8 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,17 +46,17 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.musdev.papanote.R
-import com.musdev.papanote.presentation.achieve.AchieveViewModel
-import com.musdev.papanote.presentation.edit.EditViewModel
-import com.musdev.papanote.presentation.home.navigation.BottomBarScreen
-import com.musdev.papanote.presentation.home.navigation.BottomNavGraph
-import com.musdev.papanote.presentation.notes.NotesViewModel
-import com.musdev.papanote.presentation.preview.PreviewViewModel
-import com.musdev.papanote.presentation.settings.SettingViewModel
-import com.musdev.papanote.ui.theme.DarkDisableColor
-import com.musdev.papanote.ui.theme.LightDisableColor
-import com.musdev.papanote.ui.theme.pretendard
+import com.musdev.lingonote.R
+import com.musdev.lingonote.presentation.achieve.AchieveViewModel
+import com.musdev.lingonote.presentation.edit.EditViewModel
+import com.musdev.lingonote.presentation.home.navigation.BottomBarScreen
+import com.musdev.lingonote.presentation.home.navigation.BottomNavGraph
+import com.musdev.lingonote.presentation.notes.NotesViewModel
+import com.musdev.lingonote.presentation.preview.PreviewViewModel
+import com.musdev.lingonote.presentation.settings.SettingViewModel
+import com.musdev.lingonote.ui.theme.DarkDisableColor
+import com.musdev.lingonote.ui.theme.LightDisableColor
+import com.musdev.lingonote.ui.theme.pretendard
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -94,12 +92,6 @@ fun HomeScreen(
     snackHostState = remember { SnackbarHostState() }
     coroutineScope = rememberCoroutineScope()
 
-    var currentRoute: String? by remember {
-        mutableStateOf("")
-    }
-
-    currentRoute = getCurrentRoute(navController = sharedNavHostController)
-
     Scaffold(
         snackbarHost = {
             SnackbarHost(snackHostState)
@@ -108,24 +100,14 @@ fun HomeScreen(
             buildTopBar(navController = sharedNavHostController)
         },
         floatingActionButton = {
-            when (currentRoute) {
-                BottomBarScreen.Notes.route -> {
-                    buildNewNoteActionButton(navController = sharedNavHostController)
-                }
-                BottomBarScreen.Greeting.route -> {
-                    buildNewNoteActionButton(navController = sharedNavHostController)
-                }
-                BottomBarScreen.Edit.route -> {
-                    buildEditActionButton()
-                }
-                BottomBarScreen.Achieve.route -> {
-
-                }
-                BottomBarScreen.Settings.route -> {
-
-                }
-                BottomBarScreen.Preview.route -> {
-
+            Row() {
+                when (getCurrentRoute(navController = sharedNavHostController)) {
+                    BottomBarScreen.Notes.route, BottomBarScreen.Greeting.route -> {
+                        buildNotesScreenActionButton(navController = sharedNavHostController)
+                    }
+                    BottomBarScreen.Edit.route -> {
+                        buildEditScreenFloatActionButton()
+                    }
                 }
             }
         },
@@ -206,7 +188,7 @@ fun buildTopBar(navController: NavHostController) {
 }
 
 @Composable
-fun buildNewNoteActionButton(navController: NavHostController) {
+fun buildNotesScreenActionButton(navController: NavHostController) {
     FloatingActionButton(
         containerColor = MaterialTheme.colorScheme.secondary,
         onClick = {
@@ -234,7 +216,7 @@ fun buildNewNoteActionButton(navController: NavHostController) {
 }
 
 @Composable
-fun buildEditActionButton(
+fun buildEditScreenFloatActionButton(
 ) {
     FloatingActionButton(
         containerColor = if (sharedEditViewModel.uiState.isPreviewEnable)
